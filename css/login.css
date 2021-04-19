@@ -1,0 +1,29 @@
+.login-form .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.btn-tile {
+  margin-bottom: 20px;
+}
+
+#content-wrap {
+  padding-top: 100px;
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+#inst-btn {
+  background-color: #357EC7 !important;
+}
+
+#inst-btn:hover {
+  background-color: #2a688a !important;
+}
+
+#error {
+  padding-top: 80px;
+}

@@ -1,0 +1,27 @@
+h1 {
+	padding-top: 100px;
+	padding-bottom: 10px;
+	text-align: center;
+}
+
+#description {
+	text-align: left;
+	padding-bottom: 20px;
+}
+
+#line {
+	border-top: 1px solid lightgrey;
+}
+
+.row {
+	padding-top: 20px;
+}
+
+.row figcaption {
+	padding-bottom: 40px;
+}
+
+#content-wrap {
+	text-align: center;
+	padding-bottom: 50px;
+}
