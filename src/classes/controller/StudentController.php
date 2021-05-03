@@ -68,6 +68,46 @@ class StudentController extends Controller {
 				$view = Creator::createObject('StudentAssessmentsView');
 				$this->loadAssessments();
 				break;
+			case 'timetable':
+				$view = Creator::createObject('StudentTimetableView');
+				if (!isset($_GET['date'])) {
+					$view->setBeginDate(date('Y-m-d'));
+				} else {
+					$view->setBeginDate($_GET['date']);
+				}
+				
+				$this->loadTimetable();
+				break;
+			case 'announcements':
+				$view = Creator::createObject('StudentGroupsView');
+				$view->setLink('student_view_announcements');
+				$this->loadGroups();
+				break;
+			case 'view_announcements':
+				if (!isset($_GET['code'])) {
+					$view = Creator::createObject('IndexView');
+					$view->create();
+					$this->html_output = $view->getHtmlOutput();
+					return;
+				}
+
+				$view = Creator::createObject('StudentAnnouncementsView');
+				$this->loadAnnouncements($_GET['code']);
+				break;
+			case 'institution':
+				$view = Creator::createObject('StudentInstitutionView');
+				break;
+			case 'download':
+				if (!isset($_GET['file']) || empty($_GET['file'])) {
+					$view = Creator::createObject('IndexView');
+					$view->create();
+					$this->html_output = $view->getHtmlOutput();
+					return;
+				}
+				$view = Creator::createObject('StudentDocumentsView');
+				$this->download($_GET['file']);
+				$this->loadDocuments();
+				break;
 			default:
 				$view = Creator::createObject('StudentHomeView');
 				break;
@@ -128,5 +168,56 @@ class StudentController extends Controller {
 		$model->setValidatedInput(['student_id' => SessionWrapper::getSession('student_id'),
 								   'group_code' => $_GET['code']]);
 		$this->student_personal_details['assessments'] = $model->getGroupAssessments();
+	}
+
+	private function loadTimetable() {
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('TimetableModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput(['student_id' => SessionWrapper::getSession('student_id')]);
+		$this->student_personal_details['sessions'] = $model->getStudentSessions();
+	}
+
+	private function loadAnnouncements($code) {
+		$this->student_personal_details['code'] = $code;
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('AnnouncementModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput(['code' => $code]);
+		$this->student_personal_details['announcements'] = $model->getAnnouncementsFromGroup();
+	}
+
+	private function download($id) {
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('DocumentModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput(['file_id' => $id,
+								   'user_id' => SessionWrapper::getSession('user_id')]);
+
+		$result = $model->getFilename();
+		if (empty($result)) {
+			$view = Creator::createObject('IndexView');
+			$view->create();
+			$this->html_output = $view->getHtmlOutput();
+			return;
+		}
+
+		$name = $result[0]['document_filename'];
+		$path = urldecode('documents/' . $name);	
+
+		if (file_exists($path)) {
+			header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="'.basename($path).'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($path));
+            flush();
+            readfile($path);
+		} else {
+			http_response_code(404);
+	        die();
+		}
 	}
 }

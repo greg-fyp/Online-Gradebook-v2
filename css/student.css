@@ -122,18 +122,38 @@ main {
 
 .contact-content {
 	padding-top: 15px;
-	font-size: 20px;
+	font-size: 16px;
 }
 
 .edit_input {
 	border: none;
 }
 
-.down-icon:hover {
+.icon-download:hover {
 	cursor: pointer;
 	color: lightgray;
 }
 
 #grade-container {
 	background-color: white;
+}
+
+#session-name {
+	color: lightgray;
+}
+
+#session-code {
+	color: darkgray;
+}
+
+.session-header {
+	background-color: #1fa0cf !important;
+}
+
+.post-header {
+	background-color: #1fa0cf !important;
+}
+
+.separator {
+	padding-bottom: 1px solid gray;
 }

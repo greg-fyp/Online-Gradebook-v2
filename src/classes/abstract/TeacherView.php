@@ -34,6 +34,15 @@ abstract class TeacherView extends TemplateView {
 							<li class='nav-item'>
 								<a class='nav-link' href='$target_file?route=teacher_groups'>Groups</a>
 							</li>
+							<li class='nav-item'>
+								<a class='nav-link' href='$target_file?route=teacher_timetable'>Timetable</a>
+							</li>
+							<li class='nav-item'>
+								<a class='nav-link' href='$target_file?route=teacher_announcements'>Announcements</a>
+							</li>
+							<li class='nav-item'>
+								<a class='nav-link' href='$target_file?route=teacher_documents'>Documents</a>
+							</li>
 						</ul>
 						<div class='dropdown ml-auto'>
 							<button class='btn btn-info dropdown-toggle' type='button' id='submenu' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class='icon-user'></i>$firstname </button>

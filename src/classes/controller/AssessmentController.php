@@ -4,12 +4,21 @@ class AssessmentController extends Controller {
 	private $x;
 
 	public function createHtmlOutput() {
+		if (!SessionWrapper::isLoggedIn('teacher') && !SessionWrapper::isLoggedIn('admin')) {
+			$view = Creator::createObject('LoginView');
+			$view->create();
+			$this->html_output = $view->getHtmlOutput();
+			return;
+		}
 		switch ($this->task) {
 			case 'add_assessment':
 				$this->html_output = $this->addAssessment();
 				break;
 			case 'drop_assessment':
 				$this->html_output = $this->dropAssessment();
+				break;
+			case 'change_grade':
+				$this->html_output = $this->changeGrade();
 				break;
 			case 'edit_assessment':
 				$this->html_output = $this->editAssessment();
@@ -45,11 +54,21 @@ class AssessmentController extends Controller {
 		$model->setValidatedInput($validated_input);
 		$model->addAssessment();
 
-		$controller = Creator::createObject('TeacherController');
-		$controller->set('assessments');
-		$_GET['code'] = $validated_input['code'];
-		$controller->createHtmlOutput();
-		return $controller->getHtmlOutput();
+		if (isset($_SESSION['teacher_id'])) {
+			$controller = Creator::createObject('TeacherController');
+			$controller->set('assessments');
+			$_GET['code'] = $validated_input['code'];
+			$controller->createHtmlOutput();
+			return $controller->getHtmlOutput();
+		} else if (isset($_SESSION['admin_id'])) {
+			$_GET['code'] = $validated_input['code'];
+			$controller = Creator::createObject('AdministratorController');
+			$controller->set('view_admin_assessments');
+			$controller->createHtmlOutput();
+			return $controller->getHtmlOutput();
+		} else {
+			die();
+		}
 	}
 
 	private function dropAssessment() {
@@ -61,6 +80,7 @@ class AssessmentController extends Controller {
 
 		$obj = Creator::createObject('Validate');
 		$validated['assessment_id'] = $obj->validateNumber($_GET, 'id', 7);
+		$code = $_GET['code'];
 
 		$db_handle = Creator::createDatabaseConnection();
 		$model = Creator::createObject('GradeModel');
@@ -75,7 +95,11 @@ class AssessmentController extends Controller {
 			$controller->createHtmlOutput();
 			return $controller->getHtmlOutput();
 		} else if (isset($_SESSION['admin_id'])) {
-
+			$_GET['code'] = $code;
+			$controller = Creator::createObject('AdministratorController');
+			$controller->set('view_admin_assessments');
+			$controller->createHtmlOutput();
+			return $controller->getHtmlOutput();
 		} else {
 			die();
 		}
@@ -120,10 +144,55 @@ class AssessmentController extends Controller {
 			$controller->createHtmlOutput();
 			return $controller->getHtmlOutput();
 		} else if (isset($_SESSION['admin_id'])) {
+			$controller = Creator::createObject('AdministratorController');
+			$_GET['code'] = $_POST['code'];
+			$controller->set('view_admin_assessments');
+			$controller->createHtmlOutput();
+			return $controller->getHtmlOutput();
+		} else {
+			die();
+		}
+
+	}
+
+	private function changeGrade() {
+		$obj = Creator::createObject('Validate');
+		$tainted = $_POST;
+		$validated['assessment_id'] = $obj->validateNumber($tainted, 'assessment_id', 6);
+		$validated['student_id'] = $obj->validateNumber($tainted, 'student_id', 6);
+		$validated['grade'] = $obj->validateNumber($tainted, 'grade', 3);
+		$validated['feedback'] = $obj->validateString('feedback', $tainted, 3, 128);
+
+		foreach ($validated as $item) {
+			if ($item === false) {
+				return $this->fail('change_grade_fail');
+			}
+		}
+
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('GradeModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput($validated);
+		$result = $model->getStudentResult();
+
+		if (empty($result)) {
+			$model->addGrade();
+		} else {
+			$model->editGrade();
+		}
+
+		if (isset($_SESSION['teacher_id'])) {
+			$_GET['id'] = $validated['assessment_id'];
+			$controller = Creator::createObject('TeacherController');
+			$controller->set('marking_view');
+			$controller->createHtmlOutput();
+			return $controller->getHtmlOutput();
+		} else if (isset($_SESSION['admin_id'])) {
 
 		} else {
 			die();
 		}
+
 
 	}
 

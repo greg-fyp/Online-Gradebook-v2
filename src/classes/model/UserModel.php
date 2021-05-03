@@ -55,7 +55,7 @@ class UserModel extends Model {
 		$records['user_password'] = $item['user_hashed_password'];
 		$records['user_gender'] = $item['user_gender'];
 		$records['user_dob'] = $item['user_dob'];
-		$records['user_birth_place'] = $item['user_birth_place'];
+		$records['user_address'] = $item['user_address'];
 
 		return $records;
 	}
@@ -67,6 +67,13 @@ class UserModel extends Model {
 		$this->db_handle->executeQuery($query, $params);
 	}
 
+	public function updateUserPassword() {
+		$query = SqlQuery::updateUserPassword();
+		$params = [':username' => $this->validated_input['username'],
+	               ':password' => $this->validated_input['password']];
+	    $this->db_handle->executeQuery($query, $params);
+	}
+
 	public function editUser() {
 		$query = SqlQuery::updateUser();
 		$params = [':user_id' => $this->validated_input['user_id'],
@@ -74,7 +81,24 @@ class UserModel extends Model {
 				   ':user_email' => $this->validated_input['username'],
 				   ':user_gender' => $this->validated_input['user_gender'],
 				   ':user_dob' => $this->validated_input['user_dob'],
-				   ':user_birth_place' => $this->validated_input['user_birth_place']];
+				   ':user_address' => $this->validated_input['user_address']];
+		$this->db_handle->executeQuery($query, $params);
+	}
+
+	public function addUser() {
+		$query = SqlQuery::addUser();
+		$params = [':user_fullname' => $this->validated_input['firstname'] . ' ' . $this->validated_input['lastname'],
+				   ':user_email' => $this->validated_input['username'],
+				   ':user_password' => $this->validated_input['password'],
+				   ':user_gender' => $this->validated_input['gender'],
+				   ':user_dob' => $this->validated_input['date'],
+				   ':user_address' => $this->validated_input['user_address']];
+		$this->db_handle->executeQuery($query, $params);
+	}
+
+	public function getAllUsers() {
+		$query = SqlQuery::getAllUsers();
+		$params = [];
 		$this->db_handle->executeQuery($query, $params);
 	}
 }

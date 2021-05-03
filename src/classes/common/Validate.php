@@ -115,6 +115,18 @@ class Validate {
     	return $val;
     }
 
+    public function validateGender($tainted, $name) {
+    	if (!isset($tainted[$name]) || empty($tainted[$name])) {
+    		return false;
+    	}
+
+    	if ($tainted[$name] !== 'M' && $tainted[$name] !== 'F' && $tainted[$name] !== 'X') {
+    		return false;
+    	}
+
+    	return $tainted[$name];
+    }
+
 	public function check($clean) {
 		foreach ($clean as $item) {
 			if ($item === false) {

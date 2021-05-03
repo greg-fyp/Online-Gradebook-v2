@@ -20,16 +20,25 @@ class StudentAssessmentsView extends StudentView {
 					<div class='card-deck mb-3 mt-4'>
 						<div class='card mb-4 box-shadow'>
 							<div class='card-header'>
-								<h4 class="my-0 font-weight-normal text-center">Upcoming Assessments</h4>
+								<div class='row'>
+									<div class='col-lg-2'>
+										<button class='btn btn-info' 
+										onclick="location.href='$target_file?route=student_view_assessments'"><i class='icon-left'></i></button>
+									</div>
+									<div class='col-lg-8'>
+										<h4 class="my-0 font-weight-normal text-center">Upcoming Assessments</h4>
+									</div>
+									<div class='col-lg-2'></div>
+								</div>
 							</div>
 							<div class='card-body'>
 								<div style='overflow-x: auto;'><table class='table'>
 									<thead>
 										<tr>
-											<th scope='col'>#</th>
-											<th scope='col'>Title</th>
-											<th scope='col'>Weight</th>
-											<th scope='col'>Date</th>
+											<th scope='col' class='text-center'>#</th>
+											<th scope='col' class='text-center'>Title</th>
+											<th scope='col' class='text-center'>Weight</th>
+											<th scope='col' class='text-center'>Date</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -68,10 +77,10 @@ class StudentAssessmentsView extends StudentView {
 
 			$output .= <<< HTML
 				<tr>
-					<th scope='row'>$c</th>
-					<td>$title</td>
-					<td>$weight</td>
-					<td><b>$date</b></td>
+					<th scope='row' class='text-center'>$c</th>
+					<td class='text-center'>$title</td>
+					<td class='text-center'>$weight</td>
+					<td class='text-center'><b>$date</b></td>
 				</tr>
 			HTML;
 			$c++;

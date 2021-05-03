@@ -20,12 +20,21 @@ class StudentGradesView extends StudentView {
 					<div class='card-deck mb-3 mt-4'>
 						<div class='card mb-4 box-shadow'>
 							<div class='card-header'>
-								<h4 class="my-0 font-weight-normal text-center">Your Results</h4>
+								<div class='row'>
+									<div class='col-lg-2'>
+										<button class='btn btn-info' 
+										onclick="location.href='$target_file?route=student_view_grades'"><i class='icon-left'></i></button>
+									</div>
+									<div class='col-lg-8'>
+										<h4 class="my-0 font-weight-normal text-center">Your Results</h4>
+									</div>
+									<div class='col-lg-2'></div>
+								</div>
 							</div>
 							<div class='card-body'>
 								<div style='overflow-x: auto;'><table class='table'>
 									<thead>
-										<tr>
+										<tr class='text-center'>
 											<th scope='col'>Title</th>
 											<th scope='col'>Result</th>
 											<th scope='col'>Weight</th>
@@ -37,9 +46,6 @@ class StudentGradesView extends StudentView {
 										$data_table
 									</tbody>
 								</table>
-								</div>
-								<div class='text-center mt-5'>
-									<button class='btn btn-info' onclick="location.href='$target_file?route=student_view_grades'">Go Back</button>
 								</div>
 							</div>
 							</div>
@@ -71,7 +77,7 @@ class StudentGradesView extends StudentView {
 			$feedback = $item['feedback'];
 
 			$output .= <<< HTML
-				<tr>
+				<tr class='text-center'>
 					<th scope='row'>$title</th>
 					<td><b>$result</b></td>
 					<td>$weight</td>

@@ -52,13 +52,13 @@ class StudentHomeView extends StudentView {
 					</div>
 				</div>
 				<div class='col-lg-2 col-md-4 col-sm-6'>
-					<div class='p-1 text-center tile azure mt-1'>
+					<div class='p-1 text-center tile azure mt-1' onclick="location.href='$target_file?route=student_timetable'">
 						<div class='icon'><i class='icon-calendar'></i></div>
 						Timetable
 					</div>
 				</div>
 				<div class='col-lg-2 col-md-4 col-sm-6'>
-					<div class='p-1 text-center tile blue mt-1'>
+					<div class='p-1 text-center tile blue mt-1' onclick="location.href='$target_file?route=student_announcements'">
 						<div class='icon'><i class='icon-megaphone'></i></div>
 						Announcements
 					</div>
@@ -70,7 +70,7 @@ class StudentHomeView extends StudentView {
 					</div>
 				</div>
 				<div class='col-lg-2 col-md-4 col-sm-6'>
-					<div class='p-1 text-center tile green mt-1'>
+					<div class='p-1 text-center tile green mt-1' onclick="location.href='$target_file?route=student_institution'">
 						<div class='icon'><i class='icon-bank'></i></div>
 						Institution Details
 					</div>
@@ -80,7 +80,7 @@ class StudentHomeView extends StudentView {
 				<div class='col-lg-2 col-md-4 col-sm-6'>
 					<div class='p-1 text-center tile red mt-1' onclick="location.href='$target_file?route=edit_student'">
 						<div class='icon'><i class='icon-user'></i></div>
-						Edit Profile
+						Profile
 					</div>
 				</div>
 				<div class='col-lg-2 col-md-4 col-sm-6'>

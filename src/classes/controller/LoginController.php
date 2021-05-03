@@ -34,7 +34,7 @@ class LoginController extends Controller {
 			return $this->fail();
 		}
 
-		if ($validated_input['password'] !== $results['password']) {
+		if (!BcryptWrapper::authenticate($validated_input['password'], $results['password'])) {
 			return $this->fail();
 		}
 

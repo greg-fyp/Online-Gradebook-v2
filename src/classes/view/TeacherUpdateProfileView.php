@@ -27,7 +27,7 @@ class TeacherUpdateProfileView extends TeacherView {
 		$email = $this->personal_details['user_id']['user_email'];
 		$gender = $this->personal_details['user_id']['user_gender'];
 		$dob = $this->personal_details['user_id']['user_dob'];
-		$birth_place = $this->personal_details['user_id']['user_birth_place'];
+		$address = $this->personal_details['user_id']['user_address'];
 		$user_id = $this->personal_details['user_id']['user_id'];
 		$msg = '';
 
@@ -58,7 +58,7 @@ class TeacherUpdateProfileView extends TeacherView {
 										onclick="location.href='$target_file?route=teacher_main'"><i class='icon-left'></i></button>
 									</div>
 									<div class='col-lg-8'>
-										<h4 class="my-0 font-weight-normal text-center">Edit Profile</h4>
+										<h4 class="my-0 font-weight-normal text-center">Teacher Profile</h4>
 									</div>
 									<div class='col-lg-2'></div>
 								</div>
@@ -70,15 +70,37 @@ class TeacherUpdateProfileView extends TeacherView {
 										<div class='col-lg-4 col-md-4'>
 											<div class='field_name'>Fullname</div>
 										</div>
-										<div class='col-lg-4 col-md-4 text-center'>
-											<input id='f0' class='edit_input' type='text' name='user_fullname' value='$fullname' required>
-										</div>
-										<div class='col-lg-4 col-md-4 text-center'>
-											<i class='icon-btn icon-pencil' onclick='editFullname("f0")'></i>
+										<div class='col-lg-4 col-md-4'>
+											<input type='hidden' name='user_fullname' value='$fullname'>
+											<label class='pl-3'>$fullname</label>
 										</div>
 									</div>
 								</div>
 								<div class='field mt-4'>
+									<div class='row'>
+										<div class='col-lg-4 col-md-4'>
+											<div class='field_name'>Gender</div>
+											<input type='hidden' name='user_gender' value='$gender'>
+										</div>
+										<div class='col-lg-4 col-md-4'>
+											<label class='pl-3'>$gender</label>
+										</div>
+									</div>
+								</div>
+								<div class='field mt-4'>
+									<div class='row'>
+										<div class='col-lg-4 col-md-4'>
+											<div class='field_name'>Date Of Birth</div>
+											<input type='hidden' name='user_dob' value='$dob'>
+										</div>
+										<div class='col-lg-4 col-md-4'>
+											<label class='pl-3'>$dob</label>
+										</div>
+									</div>
+								</div>
+								<div style='border-bottom: 1px solid lightgray;'></div>
+								<div class='field mt-4'>
+									
 									<div class='row'>
 										<div class='col-lg-4 col-md-4'>
 											<div class='field_name'>Email Address</div>
@@ -91,39 +113,13 @@ class TeacherUpdateProfileView extends TeacherView {
 										</div>
 									</div>
 								</div>
-								<div class='field mt-4'>
-									<div class='row'>
-										<div class='col-lg-4 col-md-4'>
-											<div class='field_name'>Gender</div>
-										</div>
-										<div class='col-lg-4 col-md-4 text-center'>
-											<input id='f2' class='edit_input' type='text' name='user_gender' value='$gender' required>
-										</div>
-										<div class='col-lg-4 col-md-4 text-center'>
-											<i class='icon-btn icon-pencil' onclick='editFullname("f2")'></i>
-										</div>
-									</div>
-								</div>
-								<div class='field mt-4'>
-									<div class='row'>
-										<div class='col-lg-4 col-md-4'>
-											<div class='field_name'>Date Of Birth</div>
-										</div>
-										<div class='col-lg-4 col-md-4 text-center'>
-											<input id='f3' class='edit_input' type='text' name='user_dob' value='$dob' required>
-										</div>
-										<div class='col-lg-4 col-md-4 text-center'>
-											<i class='icon-btn icon-pencil' onclick='editFullname("f3")'></i>
-										</div>
-									</div>
-								</div>
 									<div class='field mt-4'>
 									<div class='row'>
 										<div class='col-lg-4 col-md-4'>
-											<div class='field_name'>Place Of Birth</div>
+											<div class='field_name'>Address</div>
 										</div>
 										<div class='col-lg-4 col-md-4 text-center'>
-											<input id='f4' class='edit_input' type='text' name='user_birth_place' value='$birth_place' required>
+											<input id='f4' class='edit_input' type='text' name='user_address' value='$address' required>
 										</div>
 										<div class='col-lg-4 col-md-4 text-center'>
 											<i class='icon-btn icon-pencil' onclick='editFullname("f4")'></i>

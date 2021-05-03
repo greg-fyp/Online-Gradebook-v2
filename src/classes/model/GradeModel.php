@@ -62,4 +62,34 @@ class GradeModel extends Model {
 				   ':id' => $this->validated_input['assessment_id']];
 		$this->db_handle->executeQuery($query, $params);
 	}
+
+	public function getStudentResult() {
+		$query = SqlQuery::getStudentResult();
+		$params = [':student_id' => $this->validated_input['student_id'],
+				   ':assessment_id' => $this->validated_input['assessment_id']];
+		$this->db_handle->executeQuery($query, $params);
+		if ($this->db_handle->countRows() === 0) {
+			return [];
+		} else {
+			return $this->db_handle->fetch();
+		}
+	}
+
+	public function addGrade() {
+		$query = SqlQuery::addGrade();
+		$params = [':student_id' => $this->validated_input['student_id'],
+				   ':assessment_id' => $this->validated_input['assessment_id'],
+				   ':grade' => $this->validated_input['grade'],
+				   ':feedback' => $this->validated_input['feedback']];
+		$this->db_handle->executeQuery($query, $params);
+	}
+
+	public function editGrade() {
+		$query = SqlQuery::editGrade();
+		$params = [':student_id' => $this->validated_input['student_id'],
+				   ':assessment_id' => $this->validated_input['assessment_id'],
+				   ':grade' => $this->validated_input['grade'],
+				   ':feedback' => $this->validated_input['feedback']];
+		$this->db_handle->executeQuery($query, $params);
+	}
 }

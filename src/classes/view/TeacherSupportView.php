@@ -6,7 +6,7 @@ class TeacherSupportView extends TeacherView {
 	}
 
 	public function create() {
-		$this->page_title = APP_NAME . ' Student Support';
+		$this->page_title = APP_NAME . ' Teacher Support';
 		$this->createPage();
 	}
 
@@ -58,7 +58,7 @@ class TeacherSupportView extends TeacherView {
 											<div class='col-lg-3'>
 												<div class='contact-icon'><i class='icon-calendar'></i></div>
 											</div>
-											<div class='col-lg-5'>
+											<div class='col-lg-6'>
 												<div class='contact-content'>Monday-Friday 9.00-17.00</div>
 											</div>
 										</div>

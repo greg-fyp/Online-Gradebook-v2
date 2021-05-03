@@ -21,4 +21,17 @@ class StudentModel extends Model {
 		$records['added_timestamp'] = $item['student_added_timestamp'];
 		return $records;
 	}
+
+	public function getAllStudents() {
+		$query = SqlQuery::getAllStudents();
+		$params = [];
+		$this->db_handle->executeQuery($query, $params);
+		return $this->db_handle->fetch();
+	}
+
+	public function addRecord() {
+		$query = SqlQuery::addStudent();
+		$params = [':user_id' => $this->validated_input['user_id']];
+		$this->db_handle->executeQuery($query, $params);
+	}
 }

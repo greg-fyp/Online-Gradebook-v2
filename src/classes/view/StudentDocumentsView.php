@@ -36,11 +36,11 @@ class StudentDocumentsView extends StudentView {
 								<div style='overflow-x: auto;'><table class='table'>
 									<thead>
 										<tr>
-											<th scope='col'>#</th>
-											<th scope='col'>Title</th>
-											<th scope='col'>Name</th>
-											<th scope='col'>Description</th>
-											<th scope='col'>Download</th>
+											<th scope='col' class='text-center'>#</th>
+											<th scope='col' class='text-center'>Title</th>
+											<th scope='col' class='text-center'>Name</th>
+											<th scope='col' class='text-center'>Description</th>
+											<th scope='col' class='text-center'>Download</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -59,17 +59,20 @@ class StudentDocumentsView extends StudentView {
 
 	private function buildTable() {
 		$c = 1;
+		$target_file = ROOT_PATH;
 		$scope = 'row';
 		$div = '<div class="text-center"><div class="down-icon"><i class="icon-download"></i></div></div>';
 		$output = '';
 		foreach ($this->personal_details['documents'] as $item) {
+			$id = $item['document_id'];
 			$output .= '<tr>';
-			$output .= '<th scope="$scope">' . $c . '</th>';
-			$output .= '<td>' . $item['document_title'] .'</td>';
-			$output .= '<td>' . $item['document_filename'] .'</td>';
-			$output .= '<td>' . $item['document_description'] .'</td>';
+			$output .= '<th scope="$scope" class="text-center">' . $c . '</th>';
+			$output .= '<td class="text-center">' . $item['document_title'] .'</td>';
+			$output .= '<td class="text-center">' . $item['document_filename'] .'</td>';
+			$output .= '<td class="text-center">' . $item['document_description'] .'</td>';
 			$output .= <<< HTML
-			 	<td><div class="text-center"><div class="down-icon"><i class="icon-download"></i></div></div></td>
+			 	<td><div class="text-center"><div class="down-icon"><i class="icon-download" onclick="location.href='$target_file?route=student_download&file=$id'">
+			 	</i></div></div></td>
 			HTML;
 			$output .= '</tr>';
 			$c++;

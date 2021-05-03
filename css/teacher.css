@@ -105,7 +105,7 @@ main {
 
 .contact-content {
 	padding-top: 15px;
-	font-size: 20px;
+	font-size: 16px;
 }
 
 .edit_input {
@@ -123,4 +123,47 @@ main {
 
 .invisible {
 	display: none;
+}
+
+.feedback {
+	font-size: 20px;
+	color: #1fa0cf;
+	cursor: pointer;
+}
+
+.feedback:hover {
+	color: #0262B4;
+}
+
+.grid {
+	border: 1px solid lightgray;
+}
+
+#session-name {
+	color: lightgray;
+}
+
+#session-code {
+	color: darkgray;
+}
+
+.session-header {
+	background-color: #1fa0cf !important;
+}
+
+#new-post {
+	display: none;
+}
+
+.post-header {
+	background-color: #1fa0cf !important;
+}
+
+.post-header {
+	background-color: #1fa0cf !important;
+}
+
+.icon-download:hover {
+	cursor: pointer;
+	color: lightgray;
 }

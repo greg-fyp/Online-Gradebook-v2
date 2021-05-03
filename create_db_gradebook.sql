@@ -9,10 +9,10 @@ CREATE TABLE users (
 	user_id int(10) unsigned NOT NULL AUTO_INCREMENT,
 	user_email VARCHAR(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 	user_fullname VARCHAR(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-	user_hashed_password VARCHAR(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+	user_hashed_password VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 	user_gender VARCHAR(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 	user_dob DATE DEFAULT NULL,
-	user_birth_place VARCHAR(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+	user_address VARCHAR(80) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 	PRIMARY KEY(user_id)
 );
 
@@ -29,7 +29,6 @@ DROP TABLE IF EXISTS teachers;
 CREATE TABLE teachers(
 	teacher_id int(10) unsigned NOT NULL AUTO_INCREMENT,
 	user_id int(10) unsigned NOT NULL,
-	teacher_prefix VARCHAR(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 	teacher_added_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(teacher_id),
 	CONSTRAINT fk_user_id2 FOREIGN KEY(user_id) REFERENCES users(user_id)
@@ -74,15 +73,39 @@ CREATE TABLE assessments(
 
 DROP TABLE IF EXISTS assignments;
 CREATE TABLE assignments(
-	assignment_id int(10) unsigned NOT NULL,
+	assignment_id int(10) unsigned NOT NULL AUTO_INCREMENT,
 	assessment_id int(10) unsigned NOT NULL,
 	student_id int(10) unsigned NOT NULL,
 	grade int DEFAULT NULL,
 	feedback VARCHAR(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-	mark_date DATE DEFAULT NULL,
-	PRIMARY KEY(assessment_id),
+	mark_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY(assignment_id),
 	CONSTRAINT fk_assessment_id FOREIGN KEY(assessment_id) REFERENCES assessments(assessment_id),
 	CONSTRAINT fk_student_id1 FOREIGN KEY(student_id) REFERENCES students(student_id)
+);
+
+DROP TABLE IF EXISTS sessions;
+CREATE TABLE sessions(
+	session_id int(10) unsigned NOT NULL AUTO_INCREMENT,
+	group_code VARCHAR(8) COLLATE utf8mb4_unicode_ci NOT NULL,
+	session_date DATE DEFAULT NULL,
+	session_start_time TIME DEFAULT NULL,
+	session_duration int(1) unsigned DEFAULT NULL,
+	session_location VARCHAR(32) DEFAULT NULL,
+	PRIMARY KEY(session_id),
+	CONSTRAINT fk_group_code2 FOREIGN KEY(group_code) REFERENCES groups(group_code)
+);
+
+DROP TABLE IF EXISTS announcements;
+CREATE TABLE announcements(
+	announcement_id int(10) unsigned NOT NULL AUTO_INCREMENT,
+	group_code VARCHAR(8) COLLATE utf8mb4_unicode_ci NOT NULL,
+	announcement_title VARCHAR(64) DEFAULT NULL,
+	announcement_content VARCHAR(1024) DEFAULT NULL,
+	announcements_edited BOOL DEFAULT 0,
+	announcement_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY(announcement_id),
+	CONSTRAINT fk_group_code3 FOREIGN KEY(group_code) REFERENCES groups(group_code)
 );
 
 DROP TABLE IF EXISTS documents;

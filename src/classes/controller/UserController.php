@@ -2,12 +2,28 @@
 
 class UserController extends Controller {
 	public function createHtmlOutput() {
+		if (!SessionWrapper::isLoggedIn('user')) {
+			$view = Creator::createObject('LoginView');
+			$view->create();
+			$this->html_output = $view->getHtmlOutput();
+			return;
+		}
+		
 		switch ($this->task) {
 			case 'edit_password':
 				$this->html_output = $this->editPassword();
 				break;
 			case 'edit_user':
 				$this->html_output = $this->editUser();
+				break;
+			case 'add_user':
+				if (!SessionWrapper::isLoggedIn('admin')) {
+					$view = Creator::createObject('IndexView');
+					$view->create();
+					$this->html_output = $view->getHtmlOutput();
+					return;
+				}
+				$this->html_output = $this->addUser();
 				break;
 		}
 	}
@@ -33,7 +49,7 @@ class UserController extends Controller {
 			return $this->fail('edit_password_fail');
 		}
 
-		if ($result['password'] === $validated['password']) {
+		if (BcryptWrapper::authenticate($validated['password'], $result['password'])) {
 			if (isset($_SESSION['student_id'])) {
 				$controller = Creator::createObject('StudentController');
 				$controller->set('edit_password_success');
@@ -41,11 +57,14 @@ class UserController extends Controller {
 				$controller = Creator::createObject('TeacherController');
 				$controller->set('edit_password_success');
 			} else if (isset($_SESSION['admin_id'])) {
-
+				$controller = Creator::createObject('AdministratorController');
+				$controller->set('edit_password_success');
 			} else {
 				die();
 			}
 
+			$validated['new_password'] = BcryptWrapper::hashPassword($validated['new_password']);
+			$model->setValidatedInput($validated);
 			$model->updatePassword();
 			$controller->createHtmlOutput();
 			return $controller->getHtmlOutput();
@@ -62,7 +81,7 @@ class UserController extends Controller {
 		$validated['username'] = $obj->validateEmail($tainted, 'user_email');
 		$validated['user_gender'] = $obj->validateString('user_gender', $tainted, 1, 8);
 		$validated['user_dob'] = $obj->validateDate('user_dob', $tainted);
-		$validated['user_birth_place'] = $obj->validateString('user_birth_place', $tainted, 3, 32);
+		$validated['user_address'] = $obj->validateString('user_address', $tainted, 3, 80);
 		$validated['user_id'] = $tainted['user_id'];
 
 		foreach ($validated as $item) {
@@ -91,13 +110,76 @@ class UserController extends Controller {
 			$controller = Creator::createObject('TeacherController');
 			$controller->set('edit_profile_success');
 		} else if (isset($_SESSION['admin_id'])) {
-
+			$controller = Creator::createObject('AdministratorController');
+			$controller->set('edit_profile_success');
 		} else {
 			die();
 		}
 
 		$controller->createHtmlOutput();
 		return $controller->getHtmlOutput();	
+	}
+
+	private function addUser() {
+		$db_handle = Creator::createDatabaseConnection();
+		$tainted = $_POST;
+
+		if (!isset($_POST['type'])) {
+			$view = Creator::createObject('IndexView');
+			$view->create();
+			return $view->getHtmlOutput();
+		}
+
+		$validated = $this->validateUser($tainted);
+
+		if (!$validated) {
+			$_SESSION['msg'] = 'Cannot add new user.';
+			$controller = Creator::createObject('AdministratorController');
+			$controller->set('add_user_view');
+			$controller->createHtmlOutput();
+			return $controller->getHtmlOutput();
+		}
+
+		$model = Creator::createObject('UserModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput($validated);
+
+		if ($model->getUser() !== false) {
+			$_SESSION['msg'] = 'Cannot add new user.';
+			$controller = Creator::createObject('AdministratorController');
+			$controller->set('add_user_view');
+			$controller->createHtmlOutput();
+			return $controller->getHtmlOutput();
+		}
+
+		$model->addUser();
+		$res = $model->getUser();
+		$validated['user_id'] = $res['user_id'];
+
+		switch ($_POST['type']) {
+			case '0':
+				$model = Creator::createObject('StudentModel');
+				break;
+			case '1':
+				$model = Creator::createObject('TeacherModel');
+				break;
+			case '2':
+				$model = Creator::createObject('AdministratorModel');
+				break;
+			default:
+				$view = Creator::createObject('IndexView');
+				$view->create();
+				return $view->getHtmlOutput();
+		}
+
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput($validated);
+		$model->addRecord();
+		$_SESSION['msg'] = 'Success! User has been added';
+		$controller = Creator::createObject('AdministratorController');
+		$controller->set('add_user_view');
+		$controller->createHtmlOutput();
+		return $controller->getHtmlOutput();
 	}
 
 	private function fail($val) {
@@ -108,12 +190,43 @@ class UserController extends Controller {
 			$controller = Creator::createObject('TeacherController');
 			$controller->set($val);
 		} else if (isset($_SESSION['admin_id'])) {
-
+			$controller = Creator::createObject('AdministratorController');
+			$controller->set($val);
 		} else {
 			die();
 		}
 
 		$controller->createHtmlOutput();
 		return $controller->getHtmlOutput();
+	}
+
+	private function validateUser($tainted) {
+		$obj = Creator::createObject('Validate');
+		$validated['firstname'] = $obj->validateString('firstname', $tainted, 2, 25);
+		$validated['lastname'] = $obj->validateString('lastname', $tainted, 2, 25);
+		$validated['username'] = $obj->validateEmail($tainted, 'email');
+		$validated['password'] = $obj->validateString('password', $tainted, 4, 50);
+		$day = $obj->validateNumber($tainted, 'day', 2);
+		$month = $obj->validateNumber($tainted, 'month', 2);
+		$year = $obj->validateNumber($tainted, 'year', 4);
+		if ($day === false || $month === false || $year === false) {
+			return false;
+		} 
+
+		if (checkdate($month, $day, $year) !== false) {
+			$validated['date'] = $year . '-' . $month . '-' . $day;
+		} else {
+			$validated['date'] = false;
+		}
+
+		$validated['gender'] = $obj->validateGender($tainted, 'gender');
+		$validated['user_address'] = $obj->validateString('addr1', $tainted, 3, 40) . ' ' . $obj->validateString('addr2', $tainted, 0, 40); 
+
+		if (!$obj->check($validated)) {
+			return false;
+		} else {
+			$validated['password'] = BcryptWrapper::hashPassword($validated['password']);
+			return $validated;
+		}
 	}
 }

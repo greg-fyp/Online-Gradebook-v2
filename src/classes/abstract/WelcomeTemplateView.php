@@ -31,8 +31,7 @@ abstract class WelcomeTemplateView extends TemplateView {
 							</li>
 						</ul>
 						<div class='ml-auto'>
-							<button class='btn btn-info'>
-							<a href='$target_file?route=user_login' style='color: white; text-decoration: none;'>Login</a></button>
+							<button class='btn btn-info' onclick="location.href='$target_file?route=user_login'">Login</button>
 						</div>
 					</div>
 				</nav>

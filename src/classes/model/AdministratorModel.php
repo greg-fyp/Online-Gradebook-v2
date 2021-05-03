@@ -21,4 +21,17 @@ class AdministratorModel extends Model {
 		$records['added_timestamp'] = $item['admin_added_timestamp'];
 		return $records;
 	}
+
+	public function getAllAdmins() {
+		$query = SqlQuery::getAllAdmins();
+		$params = [];
+		$this->db_handle->executeQuery($query, $params);
+		return $this->db_handle->fetch();
+	}
+
+	public function addRecord() {
+		$query = SqlQuery::addAdmin();
+		$params = [':user_id' => $this->validated_input['user_id']];
+		$this->db_handle->executeQuery($query, $params);
+	}
 }

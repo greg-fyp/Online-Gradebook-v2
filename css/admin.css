@@ -1,5 +1,20 @@
 body {
-	background-color: #c5ccd6 !important;
+	background: rgba(70, 109, 109, 0.3) !important;
+	padding-bottom: 70px; 
+}
+
+footer {
+	position: absolute;
+	font-size: 20px;
+	width: 100%;
+	bottom: 0;
+	height: 60px;
+	line-height: 60px;
+	background-color: #f5f5f5;
+}
+
+main {
+	padding-top: 70px;
 }
 
 #mainmenu {
@@ -32,64 +47,61 @@ body {
 	margin-left: 260px;
 	padding: 20px;
 	min-height: 500px;
+	padding-bottom: 70px;
 }
 
 main {
 	padding-top: 57px;
 }
 
-.edit-btn {
-	text-decoration: none;
-	outline: none;
-	border: none;
-	background-color: white;
+.icon {
+	font-size: 40px;
+}
+
+.description {
+	font-size: 20px;
+}
+
+.tile {
+	border-radius: 5px;
+	background-color: #1fa0cf;
+	color: white;
+}
+
+.tile:hover {
 	cursor: pointer;
-	color: gray;
+	background-color: #1A85AD;
 }
 
-.position {
-	float: left;
-	display: block;
+.field_name {
+	font-weight: bold;
 }
 
-.label {
-	float: left;
-	padding-right: 20px;
+.icon-btn:hover {
+	cursor: pointer;
+	color: lightgray;
 }
 
-.quote {
-	background-color: #e66232;
+.edit_input {
+	border: none;
 }
 
-.date {
-	background-color: #d4b21c;
-}
-
-#icon {
-	font-size: 80px;
-	color: #f0ad4e;
-}
-
-#quote-content {
-	font-style: italic;
+.title-tile {
+	background-color: #1A85AD;
 	color: white;
-	font-size: 14px;
+	font-size: 40px;
 }
 
-#author {
-	color: white;
+table, th, td {
+  border: 1px solid lightgray;
 }
 
-#current_date {
-	padding-top: 30px;
-	font-size: 48px;
-	color: white;
-	font-style: bold;
+.feedback {
+	font-size: 20px;
+	color: #1fa0cf;
+	cursor: pointer;
 }
 
-#explore {
-	background-color: #13ad4e;
-	color: white;
-	font-size: 50px;
+.feedback:hover {
+	color: #0262B4;
 }
-

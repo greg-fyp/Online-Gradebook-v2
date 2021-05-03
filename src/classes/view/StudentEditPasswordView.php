@@ -65,14 +65,14 @@ class StudentEditPasswordView extends StudentView {
 									<div class='col-lg-2'></div>
 									<div class='col-lg-8'>
 										<form method='post' action=$target_file onsubmit='return check()'>
-											<input type='password' name='old_password' placeholder="Old Password" 
+											<input id='old' type='password' name='old_password' placeholder="Old Password" 
 											required class='form-control mb-3'>
 											<input type='password' id='inp0' name='new_password' placeholder="New Password" 
 											required class='form-control mb-3'>
 											<input type='password' id='inp1' name='repeat_password' placeholder="Repeat Password" required class='form-control mb-3'>
 											<div class='text-center'>
 											<input type='hidden' name='user_id' value='$user_id'>
-												<label class='text-danger' id='msg' style='display: none;'>Passwords don't match.</label>
+												<label class='text-danger' id='msg' style='display: none;'></label>
 												<button type='submit' class='btn btn-info m-1' name='route' value='edit_password'>Confirm</button>
 											</div>
 										</form>
@@ -89,8 +89,21 @@ class StudentEditPasswordView extends StudentView {
 			</div>
 			<script>
 				function check() {
-					if (document.getElementById('inp0').value !== document.getElementById('inp1').value) {
-						document.getElementById('msg').style.display = 'block';
+					var input0 = document.getElementById('inp0');
+					var input1 = document.getElementById('inp1');
+					var old = document.getElementById('old');
+					var msg = document.getElementById('msg');
+					if (input0.value !== input1.value) {
+						msg.innerHTML = 'Passwords do\'t match.';
+						msg.style.display = 'block';
+						return false;
+					} else if (old.value === input1.value) {
+						msg.innerHTML = 'Old Password has been entered';
+						msg.style.display = 'block';
+						return false;
+					} else if (input1.value.length < 8) {
+						msg.innerHTML = 'Password must be at least 8 characters long';
+						msg.style.display = 'block';
 						return false;
 					} else {
 						return true;

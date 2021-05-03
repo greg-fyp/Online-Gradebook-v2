@@ -73,6 +73,10 @@ class Router {
 				$controller = Creator::CreateObject('TeacherController');
 				$controller->set('home');
 				break;
+			case 'admin_main':
+				$controller = Creator::createObject('AdministratorController');
+				$controller->set('home');
+				break;
 			case 'edit_student':
 				$controller = Creator::createObject('StudentController');
 				$controller->set('edit');
@@ -80,6 +84,10 @@ class Router {
 			case 'edit_teacher':
 				$controller = Creator::createObject('TeacherController');
 				$controller->set('edit');
+				break;
+			case 'edit_admin':
+				$controller = Creator::createObject('AdministratorController');
+				$controller->set('edit_profile');
 				break;
 			case 'edit_student_password':
 				$controller = Creator::createObject('StudentController');
@@ -129,7 +137,7 @@ class Router {
 				$controller = Creator::createObject('AssessmentController');
 				$controller->set('add_assessment');
 				break;
-			case 'add_assessment':
+			case 'edit_assessment':
 				$controller = Creator::createObject('AssessmentController');
 				$controller->set('edit_assessment');
 				break;
@@ -156,6 +164,138 @@ class Router {
 			case 'edit_assessment':
 				$controller = Creator::createObject('AssessmentController');
 				$controller->set('edit_assessment');
+				break;
+			case 'marking_view':
+				$controller = Creator::createObject('TeacherController');
+				$controller->set('marking_view');
+				break;
+			case 'change_grade':
+				$controller = Creator::createObject('AssessmentController');
+				$controller->set('change_grade');
+				break;
+			case 'teacher_timetable':
+				$controller = Creator::createObject('TeacherController');
+				$controller->set('timetable');
+				break;
+			case 'student_timetable':
+				$controller = Creator::CreateObject('StudentController');
+				$controller->set('timetable');
+				break;
+			case 'teacher_announcements':
+				$controller = Creator::createObject('TeacherController');
+				$controller->set('announcements');
+				break;
+			case 'student_announcements':
+				$controller = Creator::createObject('StudentController');
+				$controller->set('announcements');
+				break;
+			case 'teacher_view_announcements':
+				$controller = Creator::createObject('TeacherController');
+				$controller->set('view_announcements');
+				break;
+			case 'add_announcement':
+				$controller = Creator::createObject('AnnouncementController');
+				$controller->set('add');
+				break;
+			case 'student_view_announcements':
+				$controller = Creator::createObject('StudentController');
+				$controller->set('view_announcements');
+				break;
+			case 'student_institution':
+				$controller = Creator::createObject('StudentController');
+				$controller->set('institution');
+				break;
+			case 'teacher_institution':
+				$controller = Creator::createObject('TeacherController');
+				$controller->set('institution');
+				break;
+			case 'admin_change_password':
+				$controller = Creator::createObject('AdministratorController');
+				$controller->set('change_password');
+				break;
+			case 'add_user_view':
+				$controller = Creator::createObject('AdministratorController');
+				$controller->set('add_user_view');
+				break;
+			case 'add_user_process':
+				$controller = Creator::createObject('UserController');
+				$controller->set('add_user');
+				break;
+			case 'student_download':
+				$controller = Creator::createObject('StudentController');
+				$controller->set('download');
+				break;
+			case 'teacher_documents':
+				$controller = Creator::createObject('TeacherController');
+				$controller->set('documents');
+				break;
+			case 'teacher_download':
+				$controller = Creator::createObject('TeacherController');
+				$controller->set('download');
+				break;
+			case 'view_students':
+				$controller = Creator::createObject('AdministratorController');
+				$controller->set('view_students');
+				break;
+			case 'view_teachers':
+				$controller = Creator::createObject('AdministratorController');
+				$controller->set('view_teachers');
+				break;
+			case 'view_admins':
+				$controller = Creator::createObject('AdministratorController');
+				$controller->set('view_admins');
+				break;
+			case 'view_quotes':
+				$controller = Creator::createObject('AdministratorController');
+				$controller->set('view_quotes');
+				break;
+			case 'add_quote_process':
+				$controller = Creator::createObject('AdministratorController');
+				$controller->set('add_quote');
+				break;
+			case 'edit_quote_process':
+				$controller = Creator::createObject('AdministratorController');
+				$controller->set('edit_quote');
+				break;
+			case 'drop_quote':
+				$controller = Creator::createObject('AdministratorController');
+				$controller->set('drop_quote');
+				break;
+			case 'reset_password_view':
+			case 'reset_password_process':
+			case 'add_group_view':
+			case 'add_group_process':
+			case 'admin_view_documents':
+			case 'upload_document':
+			case 'drop_document':
+			case 'edit_document_process':
+			case 'upload_document_process':
+			case 'admin_view_announcements':
+			case 'view_admin_announcements':
+			case 'admin_view_assessments':
+			case 'view_admin_assessments':
+			case 'admin_view_groups':
+			case 'group_students':
+			case 'group_sessions':
+				$controller = Creator::createObject('AdministratorController');
+				$controller->set($route);
+				break;
+			case 'edit_announcement':
+			case 'drop_announcement':
+				$controller = Creator::createObject('AnnouncementController');
+				$controller->set($route);
+				break;
+			case 'assign_student':
+			case 'drop_relation':
+				$controller = Creator::createObject('GroupController');
+				$controller->set($route);
+				break;
+			case 'edit_session':
+			case 'drop_session':
+			case 'add_session':
+			case 'add_sessions':
+				$controller = Creator::createObject('TimetableController');
+				$controller->set($route);
 				break;
 			default:
 				$controller = Creator::createObject('IndexController');

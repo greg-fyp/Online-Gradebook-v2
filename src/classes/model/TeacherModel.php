@@ -21,4 +21,17 @@ class TeacherModel extends Model {
 		$records['added_timestamp'] = $item['teacher_added_timestamp'];
 		return $records;
 	}
+
+	public function getAllTeachers() {
+		$query = SqlQuery::getAllTeachers();
+		$params = [];
+		$this->db_handle->executeQuery($query, $params);
+		return $this->db_handle->fetch();
+	}
+
+	public function addRecord() {
+		$query = SqlQuery::addTeacher();
+		$params = [':user_id' => $this->validated_input['user_id']];
+		$this->db_handle->executeQuery($query, $params);
+	}
 }

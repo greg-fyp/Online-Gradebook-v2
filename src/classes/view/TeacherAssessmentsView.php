@@ -45,7 +45,7 @@ class TeacherAssessmentsView extends TeacherView {
 										<i class='icon-left'></i></button>
 									</div>
 									<div class='col-lg-8'>
-										<h4 class="my-0 font-weight-normal text-center">Assessments</h4>
+										<h4 class="my-0 font-weight-normal text-center">$code - Assessments</h4>
 									</div>
 									<div class='col-lg-2'></div>
 								</div>
@@ -117,17 +117,43 @@ class TeacherAssessmentsView extends TeacherView {
 						</div>
 					</div>
 				</div>
+				<div class='modal' id='confirm-modal' tabindex='-1' role='dialog' aria-labelledby='Confirm' aria-hidden='true'>
+					<div class='modal-dialog modal-dialog-centered' role='document'>
+						<div class='modal-content'>
+							<div class='modal-body'>
+								<div class='form-title text-center'>
+									<h1 class="h3 mb-3 font-weight-normal">Confirm</h1>
+								</div>
+								<p class='text-center'>Are you sure you want to delete this Assessment?</p>
+								<div class='row'>
+									<div class='col-lg-4'></div>
+									<div class='col-lg-2 text-center'>
+										<button class='btn btn-info' 
+										onclick="continueDelete()">Delete</button>
+									</div>
+									<div class='col-lg-2 text-center'>
+										<button class='btn btn-info' data-dismiss='modal' aria-label='Close'>Cancel</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<script>
 				function open() {
 					$('#add-modal').modal('show');
+					$('#confirm-modal').modal('show');
 						$(function() {
 							$('[data-toogle="tooltip"]').tooltip()
 						})
 				}
-				function deleteButton(id) {
-					if (confirm('Are you sure you want to delete this Assessment?')) {
-						location.href='$target_file?route=drop_assessment&id=' + id + '&code=$code';
-					}
+				function setValue(id) {
+					document.getElementById('div_id').innerHTML = id;
+				}
+				function continueDelete() {
+					var x = document.getElementById('div_id').innerHTML;
+					var y = document.getElementById('code').innerHTML;
+					location.href = '$target_file?route=drop_assessment&id=' + x + '&code=' + y;
 				}
 			</script>
 		HTML;
@@ -147,9 +173,14 @@ class TeacherAssessmentsView extends TeacherView {
 					<th scope='row'>$c</th>
 					<td class='text-center'>$title</td>
 					<td class='text-center'>$weight</td>
-					<td class='text-center'><button class='btn btn-info'><i class='icon-search'></i></button></td>
+					<td class='text-center'><button class='btn btn-info' 
+					onclick="location.href='$target_file?route=marking_view&id=$id&code=$code'"><i class='icon-search'></i></button></td>
 					<td class='text-center'><button class='btn btn-success' onclick="location.href='$target_file?route=teacher_edit_assessment&id=$id&code=$code'"><i class='icon-pencil'></i></button></td>
-					<td class='text-center'><button class='btn btn-danger' onclick="deleteButton($id)"><i class='icon-trash'></i></button></td>
+					<td class='text-center'>
+					<div id='div_id' hidden></div>
+					<div id='code' hidden>$code</div>
+					<button class='btn btn-danger' data-toggle='modal' data-target='#confirm-modal'
+					 onclick='setValue($id)'><i class='icon-trash'></i></button></td>
 				</tr>
 			HTML;
 			$c++;

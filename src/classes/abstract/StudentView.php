@@ -38,10 +38,10 @@ abstract class StudentView extends TemplateView {
 								<a class='nav-link' href='$target_file?route=student_view_assessments'>Assessments</a>
 							</li>
 							<li class='nav-item'>
-								<a class='nav-link' href='#'>Timetable</a>
+								<a class='nav-link' href='$target_file?route=student_timetable'>Timetable</a>
 							</li>
 							<li class='nav-item'>
-								<a class='nav-link' href='#'>Announcements</a>
+								<a class='nav-link' href='$target_file?route=student_announcements'>Announcements</a>
 							</li>
 							<li class='nav-item'>
 								<a class='nav-link' href='$target_file?route=student_documents'>Documents</a>

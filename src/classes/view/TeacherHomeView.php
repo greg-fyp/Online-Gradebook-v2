@@ -45,26 +45,26 @@ class TeacherHomeView extends TeacherView {
 						Groups
 					</div>
 				</div>
-				<div class='col-lg-2 col-md-4 col-sm-6'>
+				<div class='col-lg-2 col-md-4 col-sm-6' onclick="location.href='$target_file?route=teacher_timetable'">
 					<div class='p-1 text-center tile red mt-1'>
 						<div class='icon'><i class='icon-calendar'></i></div>
 						Timetable
 					</div>
 				</div>
-				<div class='col-lg-2 col-md-4 col-sm-6'>
+				<div class='col-lg-2 col-md-4 col-sm-6' onclick="location.href='$target_file?route=teacher_announcements'">
 					<div class='p-1 text-center tile orange mt-1'>
 						<div class='icon'><i class='icon-megaphone'></i></div>
 						Announcements
 					</div>
 				</div>
 				<div class='col-lg-2 col-md-4 col-sm-6'>
-					<div class='p-1 text-center tile azure mt-1'>
+					<div class='p-1 text-center tile azure mt-1' onclick="location.href='$target_file?route=teacher_documents'">
 						<div class='icon'><i class='icon-doc-text-inv'></i></div>
 						Documents
 					</div>
 				</div>
 				<div class='col-lg-2 col-md-4 col-sm-6'>
-					<div class='p-1 text-center tile blue mt-1'>
+					<div class='p-1 text-center tile blue mt-1' onclick="location.href='$target_file?route=teacher_institution'">
 						<div class='icon'><i class='icon-bank'></i></div>
 						Institution Details
 					</div>
@@ -74,7 +74,7 @@ class TeacherHomeView extends TeacherView {
 				<div class='col-lg-2 col-md-4 col-sm-6'>
 					<div class='p-1 text-center tile orange mt-1' onclick="location.href='$target_file?route=edit_teacher'">
 						<div class='icon'><i class='icon-user'></i></div>
-						Edit Profile
+						Profile
 					</div>
 				</div>
 				<div class='col-lg-2 col-md-4 col-sm-6'>
