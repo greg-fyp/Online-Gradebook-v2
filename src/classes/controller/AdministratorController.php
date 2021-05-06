@@ -132,6 +132,7 @@ class AdministratorController extends Controller {
 			case 'admin_view_groups':
 				$view = Creator::createObject('AdministratorGroupsView');
 				$this->loadGroupsAndTeachers();
+				$this->loadTeachers();
 				break;
 			case 'group_students':
 				if (!isset($_GET['code'])) {
@@ -148,6 +149,39 @@ class AdministratorController extends Controller {
 				}
 				$view = Creator::createObject('AdministratorGroupSessionsView');
 				$this->loadSessionsFromGroup();
+				break;
+			case 'edit_user_admin':
+				$view = Creator::createObject('AdministratorEditUserView');
+				$this->loadUserDetails();
+				break;
+			case 'edit_roles':
+				$view = Creator::createObject('AdministratorEditRolesView');
+				break;
+			case 'search_user':
+				$view = Creator::createObject('AdministratorEditRolesView');
+				$this->search();
+				break;
+			case 'edit_roles_process':
+				$view = Creator::createObject('AdministratorEditRolesView');
+				$this->editRoles();
+				break;
+			case 'admin_institution':
+				$view = Creator::createObject('AdministratorInstitutionView');
+				$this->getInstitutionDetails();
+				break;
+			case 'edit_institution':
+				$view = Creator::createObject('AdministratorInstitutionView');
+				$this->editInstitution();
+				$this->getInstitutionDetails();
+				break;
+			case 'support_requests':
+				$view = Creator::createObject('AdministratorSupportView');
+				$this->loadRequests();
+				break;
+			case 'drop_request':
+				$view = Creator::createObject('AdministratorSupportView');
+				$this->dropRequest();
+				$this->loadRequests();
 				break;
 			default:
 				$view = Creator::createObject('AdministratorHomeView');
@@ -424,5 +458,159 @@ class AdministratorController extends Controller {
 		$model->setValidatedInput(['code' => $_GET['code']]);
 		$this->administrator_personal_details['sessions'] = $model->getGroupSessions();
 		$this->administrator_personal_details['code'] = $_GET['code'];
+	}
+
+	private function loadUserDetails() {
+		if (!isset($_GET['id'])) {
+			$view = Creator::createObject('LoginView');
+			return;
+		}
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('UserModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput(['user_id' => $_GET['id']]);
+		$this->administrator_personal_details['user'] = $model->getUserById();
+	}
+
+	private function search() {
+		if (!isset($_GET['u']) || empty($_GET['u'])) {
+			return;
+		}
+
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('UserModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput(['username' => $_GET['u']]);
+		$res = $model->getUser();
+
+		if (!$res) {
+			$_SESSION['msg'] = 'User Not found.';
+			return;
+		}
+
+		$foo = '';
+		$model->setValidatedInput(['user_id' => $res['user_id']]);
+		if ($model->isStudent()) {
+			$foo .= 's';
+		}
+
+		if ($model->isTeacher()) {
+			$foo .= 't';
+		}
+
+		if ($model->isAdmin()) {
+			$foo .= 'a';
+		}
+
+		$this->administrator_personal_details['role'] = $foo;
+		$this->administrator_personal_details['searched_user'] = $_GET['u'];
+	}
+
+	private function editRoles() {
+		$db_handle = Creator::createDatabaseConnection();
+		$obj = Creator::createObject('Validate');
+		$tainted = $_POST;
+		$validated['username'] = $obj->validateEmail($tainted, 'username');
+		$model = Creator::createObject('UserModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput(['username' => $validated['username']]);
+
+		$user = $model->getUser();
+		if (!$user) {
+			$_SESSION['msg'] = 'Cannot edit roles.';
+			return;
+		} 
+
+		if (!isset($_POST['student']) && !isset($_POST['teacher']) && !isset($_POST['admin'])) {
+			$_SESSION['msg'] = 'Cannot edit roles.';
+			return;
+		}
+
+		if (isset($_POST['student'])) {
+			$model->setValidatedInput(['user_id' => $user['user_id']]);
+			if (!$model->isStudent()) {
+				$model->addRoleStudent();
+			}
+		} else {
+			$model->setValidatedInput(['user_id' => $user['user_id']]);
+			if ($model->isStudent()) {
+				$model->dropRoleStudent();
+			}
+		}
+
+		if (isset($_POST['teacher'])) {
+			$model->setValidatedInput(['user_id' => $user['user_id']]);
+			if (!$model->isTeacher()) {
+				$model->addRoleTeacher();
+			}
+		} else {
+			$model->setValidatedInput(['user_id' => $user['user_id']]);
+			if ($model->isTeacher()) {
+				$model->dropRoleTeacher();
+			}
+		}
+
+		if (isset($_POST['admin'])) {
+			$model->setValidatedInput(['user_id' => $user['user_id']]);
+			if (!$model->isAdmin()) {
+				$model->addRoleAdmin();
+			}
+		} else {
+			$model->setValidatedInput(['user_id' => $user['user_id']]);
+			if ($model->isAdmin()) {
+				$model->dropRoleAdmin();
+			}
+		}
+
+		$_SESSION['msg'] = 'Success! Roles have been edited.';
+	}
+
+	private function getInstitutionDetails() {
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('InstitutionModel');
+		$model->setDatabaseHandle($db_handle);
+		$this->administrator_personal_details['institution'] = $model->getInstitutionDetails();
+	}
+
+	private function editInstitution() {
+		$db_handle = Creator::createDatabaseConnection();
+		$obj = Creator::createObject('Validate');
+		$tainted = $_POST;
+		$validated['address'] = $obj->validateString('address', $tainted, 3, 40);
+		$validated['phone'] = $obj->validateString('phone', $tainted, 3, 20);
+		$validated['email'] = $obj->validateEmail($tainted, 'email');
+		$validated['time'] = $obj->validateString('time', $tainted, 1, 50);
+
+		foreach ($validated as $item) {
+			if ($item === false) {
+				$_SESSION['msg'] = 'Cannot edit details.';
+				return;
+			}
+		}
+
+		$model = Creator::createObject('InstitutionModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput($validated);
+		$model->edit();
+		$_SESSION['msg'] = 'Succes! Data has been edited.';
+	}
+
+	private function loadRequests() {
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('RequestModel');
+		$model->setDatabaseHandle($db_handle);
+		$this->administrator_personal_details['requests'] = $model->getRequests();
+	}
+
+	private function dropRequest() {
+		if (!isset($_GET['id']) || empty($_GET['id'])) {
+			return;
+		}
+
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('RequestModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput(['request_id' => $_GET['id']]);
+		$model->dropRequest();
 	}
 }

@@ -93,9 +93,32 @@ class AdministratorTeachersTableView extends AdministratorView {
 						</div>
 					</div>
 				</div>
+				<div class='modal' id='confirm-modal' tabindex='-1' role='dialog' aria-labelledby='Confirm' aria-hidden='true'>
+					<div class='modal-dialog modal-dialog-centered' role='document'>
+						<div class='modal-content'>
+							<div class='modal-body'>
+								<div class='form-title text-center'>
+									<h1 class="h3 mb-3 font-weight-normal">Confirm</h1>
+								</div>
+								<p class='text-center'>Are you sure you want to delete this record?</p>
+								<div class='row'>
+									<div class='col-lg-4'></div>
+									<div class='col-lg-2 text-center'>
+										<button class='btn btn-info' 
+										onclick="continueDelete()">Delete</button>
+									</div>
+									<div class='col-lg-2 text-center'>
+										<button class='btn btn-info' data-dismiss='modal' aria-label='Close'>Cancel</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<script>
 				function open() {
 					$('#more-modal').modal('show');
+					$('#confirm-modal').modal('show');
 						$(function() {
 							$('[data-toogle="tooltip"]').tooltip()
 						})
@@ -110,12 +133,19 @@ class AdministratorTeachersTableView extends AdministratorView {
 					document.getElementById('more-bp').innerHTML = document.getElementById(q).innerHTML;
 					document.getElementById('more-added').innerHTML = document.getElementById(z).innerHTML;
 				}
+				function setDelete(id) {
+					toDelete = id;
+				}
+				function continueDelete() {
+					location.href = '$target_file?route=drop_teacher&id=' + toDelete;
+				}
 			</script>
 		HTML;
 	}
 
 	private function buildTable() {
 		$output = '';
+		$target_file = ROOT_PATH;
 		foreach ($this->personal_details['teachers'] as $item) {
 			$user_id = $item['user_id'];
 			$student_id = $item['teacher_id'];
@@ -137,8 +167,9 @@ class AdministratorTeachersTableView extends AdministratorView {
 					<td>$fullname</td>
 					<td>$email</td>
 					<td><button class='btn btn-info' data-toggle='modal' data-target='#more-modal' onclick='setValues($user_id)'>...</button></td>
-					<td><button class='btn btn-success m-1'><i class='icon-pencil'></i></button></td>
-					<td><button class='btn btn-danger m-1'><i class='icon-trash'></i></button></td>
+					<td><button class='btn btn-success m-1' onclick="location.href='$target_file?route=edit_user_admin&id=$user_id'"><i class='icon-pencil'></i></button></td>
+					<td><button class='btn btn-danger m-1' data-toggle='modal' 
+					data-target='#confirm-modal' onclick='setDelete($user_id)'><i class='icon-trash'></i></button></td>
 				</tr>
 			HTML;
 		}

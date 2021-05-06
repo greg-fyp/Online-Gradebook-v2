@@ -51,7 +51,14 @@ class TeacherAssessmentsView extends TeacherView {
 								</div>
 							</div>
 							<div class='card-body'>
-								<button class=' btn btn-info mb-2'  data-toggle='modal' data-target='#add-modal'>Add Assessment</button>
+								<div class='row'>
+									<div class='col-lg-2 mr-4 text-center'>
+										<button class=' btn btn-info mb-2'  data-toggle='modal' data-target='#add-modal'>Add Assessment</button>
+									</div>
+									<div class='col-lg-2 text-center'>
+										<button class='btn btn-info mb-2' onclick="location.href='$target_file?route=generate_group_report&code=$code'">Generate Report</button>
+									</div>
+								</div>
 								<div style='overflow-x: auto;'><table class='table'>
 									<thead>
 										<tr>

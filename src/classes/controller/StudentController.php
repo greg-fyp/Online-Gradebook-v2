@@ -96,6 +96,7 @@ class StudentController extends Controller {
 				break;
 			case 'institution':
 				$view = Creator::createObject('StudentInstitutionView');
+				$this->getInstitutionDetails();
 				break;
 			case 'download':
 				if (!isset($_GET['file']) || empty($_GET['file'])) {
@@ -107,6 +108,10 @@ class StudentController extends Controller {
 				$view = Creator::createObject('StudentDocumentsView');
 				$this->download($_GET['file']);
 				$this->loadDocuments();
+				break;
+			case 'request':
+				$view = Creator::createObject('StudentSupportView');
+				$this->addRequest();
 				break;
 			default:
 				$view = Creator::createObject('StudentHomeView');
@@ -219,5 +224,35 @@ class StudentController extends Controller {
 			http_response_code(404);
 	        die();
 		}
+	}
+
+	private function getInstitutionDetails() {
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('InstitutionModel');
+		$model->setDatabaseHandle($db_handle);
+		$this->student_personal_details['institution'] = $model->getInstitutionDetails();
+	}
+
+	private function addRequest() {
+		$db_handle = Creator::createDatabaseConnection();
+		$obj = Creator::createObject('Validate');
+		$tainted = $_POST;
+		$validated['title'] = $obj->validateString('title', $tainted, 1, 40);
+		$validated['content'] = $obj->validateString('content', $tainted, 1, 255);
+		$validated['user_id'] = SessionWrapper::getSession('user_id');
+
+		foreach ($validated as $item) {
+			if ($validated === false) {
+				$_SESSION['msg'] = 'Cannot add request.';
+				return;
+			}
+		}
+
+		$model = Creator::createObject('RequestModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput($validated);
+		$model->addRequest();
+
+		$_SESSION['msg'] = 'Success! Your support request has been sent.';
 	}
 }

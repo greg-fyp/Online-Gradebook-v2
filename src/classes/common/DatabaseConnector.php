@@ -29,7 +29,8 @@ class DatabaseConnector {
 			$this->db_handle = new PDO($pdo_dsn, $pdo_username, $pdo_password);
 		} catch (PDOException $ex) {
 			$flag = false;
-			trigger_error($ex);
+			echo 'Internal Error. Try again later.';
+			die();
 		}
 
 		return $flag;
@@ -43,13 +44,8 @@ class DatabaseConnector {
 			$this->prepared = $this->db_handle->prepare($query);
 			$result = $this->prepared->execute($params);
 		} catch (PDOException $ex) {
-			$error_msg = '[Error] PDO Exception Thrown\n';
-			$error_msg .= 'Query: ' . $query . "\n";
-			$error_msg .= 'Error: ' . print_r($this->prepared->errorInfo(), true) . "\n";
-
-			echo $error_msg;
-			$result = false;
-			trigger_error($ex);
+			echo 'Internal Error. Try again later.';
+			die();
 		}
 		return $result;
 	}

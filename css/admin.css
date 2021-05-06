@@ -105,3 +105,13 @@ table, th, td {
 .feedback:hover {
 	color: #0262B4;
 }
+
+.contact-icon {
+	font-size: 40px;
+	color: #1A85AD;
+}
+
+.contact-content {
+	padding-top: 15px;
+	font-size: 16px;
+}

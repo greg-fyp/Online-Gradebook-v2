@@ -277,6 +277,14 @@ class Router {
 			case 'admin_view_groups':
 			case 'group_students':
 			case 'group_sessions':
+			case 'edit_user_admin':
+			case 'edit_roles':
+			case 'search_user':
+			case 'edit_roles_process':
+			case 'admin_institution':
+			case 'edit_institution':
+			case 'support_requests':
+			case 'drop_request':
 				$controller = Creator::createObject('AdministratorController');
 				$controller->set($route);
 				break;
@@ -287,6 +295,8 @@ class Router {
 				break;
 			case 'assign_student':
 			case 'drop_relation':
+			case 'drop_group':
+			case 'edit_group':
 				$controller = Creator::createObject('GroupController');
 				$controller->set($route);
 				break;
@@ -296,6 +306,34 @@ class Router {
 			case 'add_sessions':
 				$controller = Creator::createObject('TimetableController');
 				$controller->set($route);
+				break;
+			case 'drop_admin':
+				$controller = Creator::createObject('UserController');
+				$controller->set($route);
+				break;
+			case 'drop_student':
+				$controller = Creator::createObject('UserController');
+				$controller->set($route);
+				break;
+			case 'drop_teacher':
+				$controller = Creator::createObject('UserController');
+				$controller->set($route);
+				break;
+			case 'admin_edit_user':
+				$controller = Creator::createObject('UserController');
+				$controller->set($route);
+				break;
+			case 'generate_group_report':
+				$controller = Creator::createObject('TeacherController');
+				$controller->set('report');
+				break;
+			case 'add_request_teacher':
+				$controller = Creator::createObject('TeacherController');
+				$controller->set('request');
+				break;
+			case 'add_request_student':
+				$controller = Creator::createObject('StudentController');
+				$controller->set('request');
 				break;
 			default:
 				$controller = Creator::createObject('IndexController');

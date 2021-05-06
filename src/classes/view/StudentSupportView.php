@@ -3,7 +3,6 @@
 class StudentSupportView extends StudentView {
 	public function __construct() {
 		parent::__construct();
-		$this->addStylesheet(CSS_PATH . 'student.css');
 	}
 
 	public function create() {
@@ -12,8 +11,15 @@ class StudentSupportView extends StudentView {
 	}
 
 	public function addStudentPageContent() {
+		$msg = '';
+
+		if (isset($_SESSION['msg'])) {
+			$msg = $_SESSION['msg'];
+			unset($_SESSION['msg']);
+		}
 		$target_file = ROOT_PATH;
 		$this->html_output .= <<< HTML
+			$msg
 			<div class='row'>
 				<div class='col-lg-2'></div>
 				<div class='col-lg-8'>
@@ -25,48 +31,20 @@ class StudentSupportView extends StudentView {
 										<button class='btn btn-info' 
 										onclick="location.href='$target_file?route=student_main'"><i class='icon-left'></i></button>
 									</div>
-									<div class='col-lg-3'></div>
-									<div class='col-lg-2'>
+									<div class='col-lg-8'>
 										<h4 class="my-0 font-weight-normal text-center">Support</h4>
 									</div>
+									<div class='col-lg-2'></div>
 								</div>
 							</div>
-							<div class='card-body'>
-								<div class='row'>
-									<div class='col-lg-1'>
-									</div>
-									<div class='col-lg-8 text-center'>
-										<div class='row'>
-											<div class='col-lg-3'></div>
-											<div class='col-lg-3'>
-												<div class='contact-icon'><i class='icon-phone'></i></div>
-											</div>
-											<div class='col-lg-5'>
-												<div class='contact-content'>+44 1122334455</div>
-											</div>
-										</div>
-										<div class='row'>
-											<div class='col-lg-3'></div>
-											<div class='col-lg-3'>
-												<div class='contact-icon'><i class='icon-mail'></i></div>
-											</div>
-											<div class='col-lg-6'>
-												<div class='contact-content'>grade@example.com</div>
-											</div>
-										</div>
-										<div class='row'>
-											<div class='col-lg-3'></div>
-											<div class='col-lg-3'>
-												<div class='contact-icon'><i class='icon-calendar'></i></div>
-											</div>
-											<div class='col-lg-5'>
-												<div class='contact-content'>Monday-Friday 9.00-17.00</div>
-											</div>
-										</div>
-									</div>
-									<div class='col-lg-3'>
-									</div>
-								</div>
+							<div class='card-body text-center'>
+								<h5>Please provide information about your issue:</h5>
+								<form method='post' action='$target_file'>
+									<input type='text' name='title' required class='form-control mb-3' placeholder="Title" maxlength="40">
+									<textarea maxlength="255" id='content-input' name='content' rows='6' wrap='physical'
+										class='col-lg-12 mb-2 form-control'>Content here...</textarea>
+									<button type='submit' name='route' value='add_request_student' class='btn btn-info'>Submit</button>
+								</form>
 							</div>
 							</div>
 						</div>

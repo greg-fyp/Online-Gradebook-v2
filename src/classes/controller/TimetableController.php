@@ -163,6 +163,13 @@ class TimetableController extends Controller {
 
 		$start = $obj->validateDate('start', $tainted);
 		$end = $obj->validateDate('end', $tainted);
+
+		if ($start > $end) {
+			$_SESSION['msg'] = 'Invalid dates provided.';
+			$controller->createHtmlOutput();
+			return $controller->getHtmlOutput();
+		}
+
 		$h = $obj->validateNumber($tainted, 'hour', 2);
 		$minute = $obj->validateNumber($tainted, 'minute', 2);
 		$validated['start_time'] = $h . ':' . $minute;

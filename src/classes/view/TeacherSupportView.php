@@ -11,8 +11,15 @@ class TeacherSupportView extends TeacherView {
 	}
 
 	public function addTeacherPageContent() {
+		$msg = '';
+
+		if (isset($_SESSION['msg'])) {
+			$msg = $_SESSION['msg'];
+			unset($_SESSION['msg']);
+		}
 		$target_file = ROOT_PATH;
 		$this->html_output .= <<< HTML
+			$msg
 			<div class='row'>
 				<div class='col-lg-2'></div>
 				<div class='col-lg-8'>
@@ -30,42 +37,14 @@ class TeacherSupportView extends TeacherView {
 									<div class='col-lg-2'></div>
 								</div>
 							</div>
-							<div class='card-body'>
-								<div class='row'>
-									<div class='col-lg-1'>
-									</div>
-									<div class='col-lg-8 text-center'>
-										<div class='row'>
-											<div class='col-lg-3'></div>
-											<div class='col-lg-3'>
-												<div class='contact-icon'><i class='icon-phone'></i></div>
-											</div>
-											<div class='col-lg-5'>
-												<div class='contact-content'>+44 1122334455</div>
-											</div>
-										</div>
-										<div class='row'>
-											<div class='col-lg-3'></div>
-											<div class='col-lg-3'>
-												<div class='contact-icon'><i class='icon-mail'></i></div>
-											</div>
-											<div class='col-lg-6'>
-												<div class='contact-content'>grade@example.com</div>
-											</div>
-										</div>
-										<div class='row'>
-											<div class='col-lg-3'></div>
-											<div class='col-lg-3'>
-												<div class='contact-icon'><i class='icon-calendar'></i></div>
-											</div>
-											<div class='col-lg-6'>
-												<div class='contact-content'>Monday-Friday 9.00-17.00</div>
-											</div>
-										</div>
-									</div>
-									<div class='col-lg-3'>
-									</div>
-								</div>
+							<div class='card-body text-center'>
+								<h5>Please provide information about your issue:</h5>
+								<form method='post' action='$target_file'>
+									<input type='text' name='title' required class='form-control mb-3' placeholder="Title" maxlength="40">
+									<textarea maxlength="255" id='content-input' name='content' rows='6' wrap='physical'
+										class='col-lg-12 mb-2 form-control'>Content here...</textarea>
+									<button type='submit' name='route' value='add_request_teacher' class='btn btn-info'>Submit</button>
+								</form>
 							</div>
 							</div>
 						</div>

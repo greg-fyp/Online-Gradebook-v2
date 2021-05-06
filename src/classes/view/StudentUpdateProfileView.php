@@ -105,7 +105,7 @@ class StudentUpdateProfileView extends StudentView {
 										<div class='col-lg-4 col-md-4'>
 											<div class='field_name'>Email Address</div>
 										</div>
-										<div class='col-lg-4 col-md-4 text-center'>
+										<div class='col-lg-4 col-md-4 text-left'>
 											<input id='f1' class='edit_input' type='email' name='user_email' value='$email' required>
 										</div>
 										<div class='col-lg-4 col-md-4 text-center'>
@@ -118,8 +118,8 @@ class StudentUpdateProfileView extends StudentView {
 										<div class='col-lg-4 col-md-4'>
 											<div class='field_name'>Address</div>
 										</div>
-										<div class='col-lg-4 col-md-4 text-center'>
-											<input id='f4' class='edit_input' type='text' name='user_address' value='$address' required>
+										<div class='col-lg-4 col-md-4 text-left'>
+											<input id='f4' size="40" class='edit_input' type='text' name='user_address' value='$address' required>
 										</div>
 										<div class='col-lg-4 col-md-4 text-center'>
 											<i class='icon-btn icon-pencil' onclick='editFullname("f4")'></i>

@@ -22,7 +22,7 @@ CREATE TABLE administrators(
 	user_id int(10) unsigned NOT NULL,
 	admin_added_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(admin_id),
-	CONSTRAINT fk_user_id FOREIGN KEY(user_id) REFERENCES users(user_id)
+	CONSTRAINT fk_user_id FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS teachers;
@@ -31,7 +31,7 @@ CREATE TABLE teachers(
 	user_id int(10) unsigned NOT NULL,
 	teacher_added_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(teacher_id),
-	CONSTRAINT fk_user_id2 FOREIGN KEY(user_id) REFERENCES users(user_id)
+	CONSTRAINT fk_user_id2 FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS students;
@@ -40,7 +40,7 @@ CREATE TABLE students (
 	user_id int(10) unsigned NOT NULL,
 	student_added_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(student_id),
-	CONSTRAINT fk_user_id3 FOREIGN KEY(user_id) REFERENCES users(user_id)
+	CONSTRAINT fk_user_id3 FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS groups;
@@ -49,15 +49,15 @@ CREATE TABLE groups(
 	teacher_id int(10) unsigned NOT NULL,
 	group_name VARCHAR(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 	PRIMARY KEY(group_code),
-	CONSTRAINT fk_teacher_id FOREIGN KEY(teacher_id) REFERENCES teachers(teacher_id)
+	CONSTRAINT fk_teacher_id FOREIGN KEY(teacher_id) REFERENCES teachers(teacher_id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS group_student;
 CREATE TABLE group_student(
 	group_code VARCHAR(8) COLLATE utf8mb4_unicode_ci NOT NULL,
 	student_id int(10) unsigned NOT NULL,
-	CONSTRAINT fk_group_code FOREIGN KEY(group_code) REFERENCES groups(group_code),
-	CONSTRAINT fk_student_id FOREIGN KEY(student_id) REFERENCES students(student_id)
+	CONSTRAINT fk_group_code FOREIGN KEY(group_code) REFERENCES groups(group_code) ON DELETE CASCADE,
+	CONSTRAINT fk_student_id FOREIGN KEY(student_id) REFERENCES students(student_id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS assessments;
@@ -68,7 +68,7 @@ CREATE TABLE assessments(
 	assessment_weight FLOAT(5,2) DEFAULT 100.00,
 	assessment_deadline DATE DEFAULT NULL,
 	PRIMARY KEY(assessment_id),
-	CONSTRAINT fk_group_code1 FOREIGN KEY(group_code) REFERENCES groups(group_code)
+	CONSTRAINT fk_group_code1 FOREIGN KEY(group_code) REFERENCES groups(group_code) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS assignments;
@@ -80,8 +80,8 @@ CREATE TABLE assignments(
 	feedback VARCHAR(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 	mark_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(assignment_id),
-	CONSTRAINT fk_assessment_id FOREIGN KEY(assessment_id) REFERENCES assessments(assessment_id),
-	CONSTRAINT fk_student_id1 FOREIGN KEY(student_id) REFERENCES students(student_id)
+	CONSTRAINT fk_assessment_id FOREIGN KEY(assessment_id) REFERENCES assessments(assessment_id) ON DELETE CASCADE,
+	CONSTRAINT fk_student_id1 FOREIGN KEY(student_id) REFERENCES students(student_id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS sessions;
@@ -93,7 +93,7 @@ CREATE TABLE sessions(
 	session_duration int(1) unsigned DEFAULT NULL,
 	session_location VARCHAR(32) DEFAULT NULL,
 	PRIMARY KEY(session_id),
-	CONSTRAINT fk_group_code2 FOREIGN KEY(group_code) REFERENCES groups(group_code)
+	CONSTRAINT fk_group_code2 FOREIGN KEY(group_code) REFERENCES groups(group_code) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS announcements;
@@ -105,7 +105,7 @@ CREATE TABLE announcements(
 	announcements_edited BOOL DEFAULT 0,
 	announcement_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(announcement_id),
-	CONSTRAINT fk_group_code3 FOREIGN KEY(group_code) REFERENCES groups(group_code)
+	CONSTRAINT fk_group_code3 FOREIGN KEY(group_code) REFERENCES groups(group_code) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS documents;
@@ -117,7 +117,7 @@ CREATE TABLE documents(
 	document_description VARCHAR(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 	document_added_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(document_id),
-	CONSTRAINT fk_user_id4 FOREIGN KEY(user_id) REFERENCES users(user_id)
+	CONSTRAINT fk_user_id4 FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
 ); 
 
 DROP TABLE IF EXISTS quotes;
@@ -126,4 +126,22 @@ CREATE TABLE quotes(
 	quote_content VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 	quote_author VARCHAR(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 	PRIMARY KEY(quote_id)
+);
+
+DROP TABLE IF EXISTS institution;
+CREATE TABLE institution(
+	institution_address VARCHAR(80) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+	institution_phone VARCHAR(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+	institution_email VARCHAR(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+	institution_time VARCHAR(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+);
+
+DROP TABLE IF EXISTS support_requests;
+CREATE TABLE support_requests(
+	request_id int(10) unsigned NOT NULL AUTO_INCREMENT,
+	user_id int(10) unsigned NOT NULL,
+	request_title VARCHAR(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+	request_content VARCHAR(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+	PRIMARY KEY(request_id),
+	CONSTRAINT fk_user_id5 FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );

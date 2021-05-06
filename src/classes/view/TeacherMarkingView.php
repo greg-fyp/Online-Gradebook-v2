@@ -99,10 +99,59 @@ class TeacherMarkingView extends TeacherView {
 						</div>
 					</div>
 				</div>
+				<div class='modal fade' id='view-profile' tabindex='-1' role='dialog' aria-labelledby='View Profile' aria-hidden='true'>
+					<div class='modal-dialog modal-dialog-centered' role='document'>
+						<div class='modal-content'>
+							<div class='modal-body'>
+								<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+									<span aria-hidden='true'>x</span>
+								</button>
+								<div class='form-title text-center'>
+									<h1 class="h3 mb-3 font-weight-normal">Student Details</h1>
+								</div>
+								<div class='text-center'>
+								<div class='row ml-2'>
+									<div class='col-3'>
+										<b>Name:</b>
+									</div>
+									<div class='col-9'>
+										<div id='info-fullname' class='ml-2'></div>
+									</div>
+								</div>
+								<div class='row ml-2'>
+									<div class='col-3'>
+										<b>Email:</b>
+									</div>
+									<div class='col-9'>
+										<div id='info-email' class='ml-2'></div>
+									</div>
+								</div>
+								<div class='row ml-2'>
+									<div class='col-3'>
+										<b>Gender:</b>
+									</div>
+									<div class='col-9'>
+										<div id='info-gender' class='ml-2'></div>
+									</div>
+								</div>
+								<div class='row ml-2'>
+									<div class='col-3'>
+										<b>Birth Date:</b>
+									</div>
+									<div class='col-9'>
+										<div id='info-dob'></div>
+									</div>
+								</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<script type="text/javascript">
 					function open() {
 					$('#feedback-modal').modal('show');
 					$('#edit-modal').modal('show');
+					$('#view-profile').modal('show');
 						$(function() {
 							$('[data-toogle="tooltip"]').tooltip()
 						})
@@ -118,6 +167,12 @@ class TeacherMarkingView extends TeacherView {
 						document.getElementById('grade-input').value = document.getElementById(divRes).innerHTML;
 						document.getElementById('student-input').value = id;
 					}
+					function setInfo(fullname, email, gender, dob) {
+						document.getElementById('info-fullname').innerHTML = fullname;
+						document.getElementById('info-email').innerHTML = email;
+						document.getElementById('info-gender').innerHTML = gender;
+						document.getElementById('info-dob').innerHTML = dob;
+					}
 				</script>
 		HTML;
 	}
@@ -127,6 +182,10 @@ class TeacherMarkingView extends TeacherView {
 		foreach ($this->personal_details['students'] as $student) {
 			$id = $student['student_id'];
 			$fullname = $student['user']['user_fullname'];
+			$email = $student['user']['user_email'];
+			$gender = $student['user']['user_gender'];
+			$dob = $student['user']['user_dob'];
+			$address = $student['user']['user_address'];
 			if (empty($student['result'])) {
 				$result = '-';
 				$feedback = '';
@@ -145,7 +204,9 @@ class TeacherMarkingView extends TeacherView {
 					<td><i class='icon-comment feedback' data-toggle='modal' data-target='#feedback-modal' onclick='expand($id)'></i></td>
 					<td><button class='btn btn-info pl-4 pr-4' data-toggle='modal' data-target='#edit-modal' onclick='setValues($id)'>
 					<i class='icon-pencil'></i></button></td>
-					<td><button class='btn btn-info pl-4 pr-4'><i class='icon-user'></i></button></td>
+					<td><button class='btn btn-info pl-4 pr-4' data-toggle='modal' 
+					data-target='#view-profile' onclick="setInfo('$fullname', '$email', '$gender', '$dob')">
+					<i class='icon-user'></i></button></td>
 				</tr>
 			HTML;
 		}

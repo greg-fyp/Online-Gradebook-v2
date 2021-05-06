@@ -101,4 +101,79 @@ class UserModel extends Model {
 		$params = [];
 		$this->db_handle->executeQuery($query, $params);
 	}
+
+	public function dropUser() {
+		$query = SqlQuery::dropUser();
+		$params = [':user_id' => $this->validated_input['user_id']];
+		$this->db_handle->executeQuery($query, $params);
+	}
+
+	public function isStudent() {
+		$query = SqlQuery::checkStudent();
+		$params = [':user_id' => $this->validated_input['user_id']];
+		$this->db_handle->executeQuery($query, $params);
+		if ($this->db_handle->countRows() === 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function isTeacher() {
+		$query = SqlQuery::checkTeacher();
+		$params = [':user_id' => $this->validated_input['user_id']];
+		$this->db_handle->executeQuery($query, $params);
+		if ($this->db_handle->countRows() === 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function isAdmin() {
+		$query = SqlQuery::checkAdmin();
+		$params = [':user_id' => $this->validated_input['user_id']];
+		$this->db_handle->executeQuery($query, $params);
+		if ($this->db_handle->countRows() === 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function addRoleStudent() {
+		$query = SqlQuery::addRoleStudent();
+		$params = [':user_id' => $this->validated_input['user_id']];
+		$this->db_handle->executeQuery($query, $params);
+	}
+
+	public function addRoleTeacher() {
+		$query = SqlQuery::addRoleTeacher();
+		$params = [':user_id' => $this->validated_input['user_id']];
+		$this->db_handle->executeQuery($query, $params);
+	}
+
+	public function addRoleAdmin() {
+		$query = SqlQuery::addRoleAdmin();
+		$params = [':user_id' => $this->validated_input['user_id']];
+		$this->db_handle->executeQuery($query, $params);
+	}
+
+	public function dropRoleStudent() {
+		$query = SqlQuery::dropRoleStudent();
+		$params = [':user_id' => $this->validated_input['user_id']];
+		$this->db_handle->executeQuery($query, $params);
+	}
+
+	public function dropRoleTeacher() {
+		$query = SqlQuery::dropRoleTeacher();
+		$params = [':user_id' => $this->validated_input['user_id']];
+		$this->db_handle->executeQuery($query, $params);
+	}
+
+	public function dropRoleAdmin() {
+		$query = SqlQuery::dropRoleAdmin();
+		$params = [':user_id' => $this->validated_input['user_id']];
+		$this->db_handle->executeQuery($query, $params);
+	}
 }

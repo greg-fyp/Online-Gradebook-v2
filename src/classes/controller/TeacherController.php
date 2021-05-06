@@ -137,6 +137,7 @@ class TeacherController extends Controller {
 				break;
 			case 'institution':
 				$view = Creator::createObject('TeacherInstitutionView');
+				$this->getInstitutionDetails();
 				break;
 			case 'documents':
 				$view = Creator::createObject('TeacherDocumentsView');
@@ -153,6 +154,22 @@ class TeacherController extends Controller {
 				$view = Creator::createObject('TeacherDocumentsView');
 				$this->download($_GET['file']);
 				$this->loadDocuments();
+				break;
+			case 'report':
+				if (!isset($_GET['code'])) {
+					$view = Creator::createObject('IndexView');
+					$view->create();
+					$this->html_output = $view->getHtmlOutput();
+					return;
+				}
+				$this->loadAllResults();
+				$this->generateReport();
+				$this->loadAssessments();
+				$view = Creator::createObject('TeacherAssessmentsView');
+				break;
+			case 'request':
+				$view = Creator::createObject('TeacherSupportView');
+				$this->addRequest();
 				break;
 			default:
 				$view = Creator::createObject('TeacherHomeView');
@@ -301,4 +318,65 @@ class TeacherController extends Controller {
 		}
 	}
 
+	private function generateReport() {
+		if (empty($this->teacher_personal_details['data'])) {
+			return;
+		}
+		
+		$details = $this->teacher_personal_details['data'];
+		$pdf = Creator::createObject('PDFWrapper');
+		$pdf->createGroupReport($details);
+		$pdf->output();
+	}
+
+	private function loadAllResults() {
+		$this->loadStudents($_GET['code']);
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('GradeModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput(['group_code' => $_GET['code']]);
+		$assessments = $model->getGroupAssessments();
+		foreach ($assessments as &$item) {
+			$item['students'] = [];
+			foreach ($this->teacher_personal_details['students'] as $student) {
+				$model->setValidatedInput(['student_id' => $student['student_id'],
+									   'assessment_id' => $item['assessment_id']]);
+				$details = $model->getStudentResult();
+				$student['result'] = $details;
+				array_push($item['students'], $student);
+			}
+		}
+
+		$this->teacher_personal_details['data'] = $assessments;
+	}
+
+	private function getInstitutionDetails() {
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('InstitutionModel');
+		$model->setDatabaseHandle($db_handle);
+		$this->teacher_personal_details['institution'] = $model->getInstitutionDetails();
+	}
+
+	private function addRequest() {
+		$db_handle = Creator::createDatabaseConnection();
+		$obj = Creator::createObject('Validate');
+		$tainted = $_POST;
+		$validated['title'] = $obj->validateString('title', $tainted, 1, 40);
+		$validated['content'] = $obj->validateString('content', $tainted, 1, 255);
+		$validated['user_id'] = SessionWrapper::getSession('user_id');
+
+		foreach ($validated as $item) {
+			if ($validated === false) {
+				$_SESSION['msg'] = 'Cannot add request.';
+				return;
+			}
+		}
+
+		$model = Creator::createObject('RequestModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput($validated);
+		$model->addRequest();
+
+		$_SESSION['msg'] = 'Success! Your support request has been sent.';
+	}
 }

@@ -16,6 +16,9 @@ class UserController extends Controller {
 			case 'edit_user':
 				$this->html_output = $this->editUser();
 				break;
+			case 'admin_edit_user':
+				$this->html_output = $this->adminEditUser();
+				break;
 			case 'add_user':
 				if (!SessionWrapper::isLoggedIn('admin')) {
 					$view = Creator::createObject('IndexView');
@@ -24,6 +27,33 @@ class UserController extends Controller {
 					return;
 				}
 				$this->html_output = $this->addUser();
+				break;
+			case 'drop_admin':
+				if (!SessionWrapper::isLoggedIn('admin') || !isset($_GET['id'])) {
+					$view = Creator::createObject('IndexView');
+					$view->create();
+					$this->html_output = $view->getHtmlOutput();
+					return;
+				}
+				$this->html_output = $this->dropAdmin();
+				break;
+			case 'drop_student':
+				if (!SessionWrapper::isLoggedIn('admin') || !isset($_GET['id'])) {
+					$view = Creator::createObject('IndexView');
+					$view->create();
+					$this->html_output = $view->getHtmlOutput();
+					return;
+				}
+				$this->html_output = $this->dropStudent();
+				break;
+			case 'drop_teacher':
+				if (!SessionWrapper::isLoggedIn('admin') || !isset($_GET['id'])) {
+					$view = Creator::createObject('IndexView');
+					$view->create();
+					$this->html_output = $view->getHtmlOutput();
+					return;
+				}
+				$this->html_output = $this->dropTeacher();
 				break;
 		}
 	}
@@ -118,6 +148,49 @@ class UserController extends Controller {
 
 		$controller->createHtmlOutput();
 		return $controller->getHtmlOutput();	
+	}
+
+	private function adminEditUser() {
+		$obj = Creator::createObject('Validate');
+		$tainted = $_POST;
+		$validated['user_fullname'] = $obj->validateString('user_fullname', $tainted, 5, 50);
+		$validated['username'] = $obj->validateEmail($tainted, 'user_email');
+		$validated['user_gender'] = $obj->validateString('user_gender', $tainted, 1, 8);
+		$validated['user_dob'] = $obj->validateDate('user_dob', $tainted);
+		$validated['user_address'] = $obj->validateString('user_address', $tainted, 3, 80);
+		$validated['user_id'] = $tainted['user_id'];
+
+		$controller = Creator::createObject('AdministratorController');
+		$controller->set('edit_user_admin');
+
+		foreach ($validated as $item) {
+			if ($item === false) {
+				$_SESSION['msg'] = 'Cannot edit user.';
+				$_GET['id'] = $validated['user_id'];
+				$controller->createHtmlOutput();
+				return $controller->getHtmlOutput();
+			}
+		}
+
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('UserModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput($validated);
+		$data = $model->getUser();
+		if ($data !== false) {
+			if ($data['user_id'] !== $validated['user_id']) {
+				$_SESSION['msg'] = 'Cannot edit User.';
+				$_GET['id'] = $validated['user_id'];
+				$controller->createHtmlOutput();
+				return $controller->getHtmlOutput();
+			}
+		}
+
+		$model->editUser();
+		$_GET['id'] = $validated['user_id'];
+		$_SESSION['msg'] = 'Success! Details updated.';
+		$controller->createHtmlOutput();
+		return $controller->getHtmlOutput();
 	}
 
 	private function addUser() {
@@ -228,5 +301,47 @@ class UserController extends Controller {
 			$validated['password'] = BcryptWrapper::hashPassword($validated['password']);
 			return $validated;
 		}
+	}
+
+	private function dropAdmin() {
+		$id = $_GET['id'];
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('UserModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput(['user_id' => $id]);
+		$model->dropUser();
+
+		$controller = Creator::createObject('AdministratorController');
+		$controller->set('view_admins');
+		$controller->createHtmlOutput();
+		return $controller->getHtmlOutput();
+	}
+
+	private function dropStudent() {
+		$id = $_GET['id'];
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('UserModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput(['user_id' => $id]);
+		$model->dropUser();
+
+		$controller = Creator::createObject('AdministratorController');
+		$controller->set('view_students');
+		$controller->createHtmlOutput();
+		return $controller->getHtmlOutput();
+	}
+
+	private function dropTeacher() {
+		$id = $_GET['id'];
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('UserModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput(['user_id' => $id]);
+		$model->dropUser();
+
+		$controller = Creator::createObject('AdministratorController');
+		$controller->set('view_teachers');
+		$controller->createHtmlOutput();
+		return $controller->getHtmlOutput();
 	}
 }

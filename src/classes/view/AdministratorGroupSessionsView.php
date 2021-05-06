@@ -95,7 +95,7 @@ class AdministratorGroupSessionsView extends AdministratorView {
 											</div>
 											<div class='col-4'>
 												<select class='form-control mb-3' required name='duration' id='input-duration'>
-													<option value='0' disabled selected>Duration</option>
+													<option value='' disabled selected>Duration</option>
 													<option value='1'>1</option>
 													<option value='2'>2</option>
 													<option value='3'>3</option>
@@ -146,7 +146,7 @@ class AdministratorGroupSessionsView extends AdministratorView {
 											</div>
 											<div class='col-4'>
 												<select class='form-control mb-3' required name='duration'>
-													<option value='0' disabled selected>Duration</option>
+													<option value='' disabled selected>Duration</option>
 													<option value='1'>1</option>
 													<option value='2'>2</option>
 													<option value='3'>3</option>
@@ -175,11 +175,11 @@ class AdministratorGroupSessionsView extends AdministratorView {
 										<div class='row'>
 											<div class='col-2'><label>From:</label></div>
 										</div>
-										<input type='date' name='start' required class='form-control mb-1'>
+										<input type='date' name='start' required class='form-control mb-1' id='date-start'>
 										<div class='row'>
 											<div class='col-2'><label>To:</label></div>
 										</div>
-										<input type='date' name='end' required class='form-control mb-3'>
+										<input type='date' name='end' required class='form-control mb-3' id='date-end'>
 										<div class='row'>
 											<div class='col-2'><label>Day:</label></div>
 										</div>
@@ -211,6 +211,7 @@ class AdministratorGroupSessionsView extends AdministratorView {
 										<input type='text' name='location' required class='form-control mb-3' 
 										placeholder="Location">
 										<input type='hidden' name='code' value='$code'>
+										<div style='display: none; color: red;' id='error'>Invalid dates provided.</div>
 										<button type='submit' name='route' value='add_sessions' class='btn btn-info'>Submit</button>
 									</form>
 								</button>

@@ -18,6 +18,12 @@ class GroupController extends Controller {
 			case 'drop_relation':
 				$this->html_output = $this->dropAssignment();
 				break;
+			case 'drop_group':
+				$this->html_output = $this->dropGroup();
+				break;
+			case 'edit_group':
+				$this->html_output = $this->editGroup();
+				break;
 		}
 	}
 
@@ -93,6 +99,55 @@ class GroupController extends Controller {
 		$controller = Creator::createObject('AdministratorController');
 		$_GET['code'] = $validated['code'];
 		$controller->set('group_students');
+		$controller->createHtmlOutput();
+		return $controller->getHtmlOutput();
+	}
+
+	private function dropGroup() {
+		if (!isset($_GET['code'])) {
+			$controller = Creator::createObject('AdministratorController');
+			$controller->set('main');
+			$controller->createHtmlOutput();
+			return $controller->getHtmlOutput();
+		}
+
+		$controller = Creator::createObject('AdministratorController');
+		$controller->set('admin_view_groups');
+
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('GroupModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput(['code' => $_GET['code']]);
+		$model->dropGroup();
+
+		$controller->createHtmlOutput();
+		return $controller->getHtmlOutput();
+	}
+
+	private function editGroup() {
+		$controller = Creator::createObject('AdministratorController');
+		$controller->set('admin_view_groups');
+
+		$obj = Creator::createObject('Validate');
+		$tainted = $_POST;
+		$validated['group_code'] = $obj->validateString('group_code', $tainted, 8, 8);
+		$validated['group_name'] = $obj->validateString('name', $tainted, 3, 32);
+		$validated['teacher_id'] = $_POST['teacher_id'];
+
+		foreach ($validated as $item) {
+			if ($item === false) {
+				$_SESSION['msg'] = 'Invalid data provided.';
+				$controller->createHtmlOutput();
+				return $controller->getHtmlOutput();
+			}
+		}
+
+		$db_handle = Creator::createDatabaseConnection();
+		$model = Creator::createObject('GroupModel');
+		$model->setDatabaseHandle($db_handle);
+		$model->setValidatedInput($validated);
+		$model->editGroup();
+
 		$controller->createHtmlOutput();
 		return $controller->getHtmlOutput();
 	}

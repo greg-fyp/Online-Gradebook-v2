@@ -143,4 +143,18 @@ class GroupModel extends Model {
 	               ':group_code' => $this->validated_input['code']];
 	    $this->db_handle->executeQuery($query, $params);
 	}
+
+	public function dropGroup() {
+		$query = SqlQuery::dropGroup();
+		$params = [':group_code' => $this->validated_input['code']];
+		$this->db_handle->executeQuery($query, $params);
+	}
+
+	public function editGroup() {
+		$query = SqlQuery::editGroup();
+		$params = [':group_code' => $this->validated_input['group_code'],
+	               ':group_name' => $this->validated_input['group_name'],
+	               ':teacher_id' => $this->validated_input['teacher_id']];
+	    $this->db_handle->executeQuery($query, $params);
+	}
 }

@@ -170,7 +170,8 @@ class SqlQuery {
 		$query .= 'sessions.session_date, sessions.session_start_time, sessions.session_duration, ';
 		$query .= 'sessions.session_date, sessions.session_start_time, sessions.session_duration, ';
 		$query .= 'sessions.session_location FROM sessions ';
-		$query .= 'INNER JOIN groups ON groups.group_code=sessions.group_code WHERE groups.teacher_id=:teacher_id';
+		$query .= 'INNER JOIN groups ON groups.group_code=sessions.group_code WHERE groups.teacher_id=:teacher_id ';
+		$query .= 'ORDER BY sessions.session_start_time';
 		return $query . ';';
 	}
 
@@ -181,7 +182,8 @@ class SqlQuery {
 		$query .= 'sessions.session_location FROM group_student ';
 		$query .= 'INNER JOIN groups ON groups.group_code=group_student.group_code ';
 		$query .= 'INNER JOIN sessions ON sessions.group_code=group_student.group_code ';
-		$query .= 'WHERE student_id=:student_id';
+		$query .= 'WHERE student_id=:student_id ';
+		$query .= 'ORDER BY sessions.session_start_time';
 		return $query . ';';
 	}
 
@@ -368,6 +370,94 @@ class SqlQuery {
 	public static function addSession() {
 		$query = 'INSERT INTO sessions (group_code, session_date, session_start_time, session_duration, session_location) ';
 		$query .= 'VALUES (:group_code, :session_date, :session_start_time, :session_duration, :session_location)';
+		return $query . ';';
+	}
+
+	public static function dropGroup() {
+		$query = 'DELETE FROM groups WHERE group_code=:group_code';
+		return $query . ';';
+	}
+
+	public static function editGroup() {
+		$query = 'UPDATE groups SET group_name=:group_name, teacher_id=:teacher_id ';
+		$query .= 'WHERE group_code=:group_code';
+		return $query . ';';
+	}
+
+	public static function dropUser() {
+		$query = 'DELETE FROM users WHERE user_id=:user_id';
+		return $query . ';';
+	}
+
+	public static function checkStudent() {
+		$query = 'SELECT * FROM students WHERE user_id=:user_id LIMIT 1';
+		return $query . ';';
+	}
+
+	public static function checkTeacher() {
+		$query = 'SELECT * FROM teachers WHERE user_id=:user_id LIMIT 1';
+		return $query . ';';
+	}
+
+	public static function checkAdmin() {
+		$query = 'SELECT * FROM administrators WHERE user_id=:user_id LIMIT 1';
+		return $query . ';';
+	}
+
+	public static function addRoleStudent() {
+		$query = 'INSERT INTO students (user_id) VALUES (:user_id)';
+		return $query . ';';
+	}
+
+	public static function addRoleTeacher() {
+		$query = 'INSERT INTO teachers (user_id) VALUES (:user_id)';
+		return $query . ';';
+	}
+
+	public static function addRoleAdmin() {
+		$query = 'INSERT INTO administrators (user_id) VALUES (:user_id)';
+		return $query . ';';
+	}
+
+	public function dropRoleStudent() {
+		$query = 'DELETE FROM students WHERE user_id=:user_id';
+		return $query . ';';
+	}
+
+	public function dropRoleTeacher() {
+		$query = 'DELETE FROM teachers WHERE user_id=:user_id';
+		return $query . ';';
+	}
+
+	public function dropRoleAdmin() {
+		$query = 'DELETE FROM administrators WHERE user_id=:user_id';
+		return $query . ';';
+	}
+
+	public static function getInstitution() {
+		$query = 'SELECT * FROM institution LIMIT 1';
+		return $query . ';';
+	}
+
+	public static function editInstitution() {
+		$query = 'UPDATE institution SET institution_address=:institution_address, institution_phone=:institution_phone, ';
+		$query .= 'institution_email=:institution_email, institution_time=:institution_time WHERE 1=1';
+		return $query . ';';
+	}
+
+	public static function addRequest() {
+		$query = 'INSERT INTO support_requests (user_id, request_title, request_content) VALUES ';
+		$query .= '(:user_id, :request_title, :request_content)';
+		return $query . ';';
+	}
+
+	public static function getRequests() {
+		$query = 'SELECT * FROM support_requests';
+		return $query . ';';
+	}
+
+	public static function dropRequest() {
+		$query = 'DELETE FROM support_requests WHERE request_id=:request_id';
 		return $query . ';';
 	}
 }
