@@ -23,12 +23,6 @@ abstract class WelcomeTemplateView extends TemplateView {
 							<li class='nav-item'>
 								<a class='nav-link' href='$target_file'>About</a>
 							</li>
-							<li class='nav-item'>
-								<a class='nav-link' href='$target_file?route=information'>Information</a>
-							</li>
-							<li class='nav-item'>
-								<a class='nav-link' href='$target_file?route=terms'>Terms & Conditions</a>
-							</li>
 						</ul>
 						<div class='ml-auto'>
 							<button class='btn btn-info' onclick="location.href='$target_file?route=user_login'">Login</button>
