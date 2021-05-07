@@ -60,12 +60,12 @@ class AdministratorHomeView extends AdministratorView {
 						<div class='col-lg-4 col-md-8 col-sm-12'></div>
 						<div class='col-lg-4 col-md-8 col-sm-12'></div>
 						<div class='col-lg-4 col-md-8 col-sm-12'>
-							<div class='p-1 text-center tile orange' onclick="location.href='$target_file?route=support_requests'">
+							<div class='p-1 text-center tile orange mt-1' onclick="location.href='$target_file?route=support_requests'">
 								<div class='icon'><i class='icon-question-circle-o'></i></div>
 								Support Requests
 							</div>
 						</div>
-						</div>
+					</div>
 				</div>
 				<div class='col-lg-6'>
 					<div class='title-tile col-lg-12 text-center'><i class='icon-database'></i> Records</div>

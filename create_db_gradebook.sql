@@ -102,7 +102,6 @@ CREATE TABLE announcements(
 	group_code VARCHAR(8) COLLATE utf8mb4_unicode_ci NOT NULL,
 	announcement_title VARCHAR(64) DEFAULT NULL,
 	announcement_content VARCHAR(1024) DEFAULT NULL,
-	announcements_edited BOOL DEFAULT 0,
 	announcement_timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY(announcement_id),
 	CONSTRAINT fk_group_code3 FOREIGN KEY(group_code) REFERENCES groups(group_code) ON DELETE CASCADE

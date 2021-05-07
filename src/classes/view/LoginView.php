@@ -54,7 +54,7 @@ class LoginView extends WelcomeTemplateView {
 						<div style='font-size: 50px;'><i class='icon-cog-alt'></i></div>
 						<br />Administrator Login</button>
 					</div>
-				<div class='modal fade' id='login-modal' tabindex='-1' role='dialog' aria-labelledby='Login User' aria-hidden='true'>
+				<div class='modal fade' id='login-modal' tabindex='-2' role='dialog' aria-labelledby='Login User' aria-hidden='true'>
 					<div class='modal-dialog modal-dialog-centered' role='document'>
 						<div class='modal-content'>
 							<div class='modal-header border-bottom-0'>

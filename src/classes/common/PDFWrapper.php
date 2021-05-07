@@ -73,7 +73,7 @@ class PDFWrapper extends FPDF {
 		if ($num === 0) {
 			return 0;
 		} else {
-			return $res / $num;
+			return number_format($res / $num, 2, '.', '');
 		}
 	}
 
@@ -95,6 +95,8 @@ class PDFWrapper extends FPDF {
 		sort($numbers);
 		if (count($numbers) == 2) {
 			return ($numbers[0] + $numbers[1]) / 2;
+		} else if (count($numbers) == 1) {
+			return $numbers[0];
 		}
 
 		$mid = intval((count($numbers) / 2));
@@ -104,7 +106,7 @@ class PDFWrapper extends FPDF {
 			$res = $numbers[$mid-1] + $numbers[$mid];
 			$res /= 2;
 		}
-		return $res;
+		return number_format($res, 2, '.', '');
 	}
 
 }
